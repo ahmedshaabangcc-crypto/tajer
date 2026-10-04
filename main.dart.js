@@ -32662,7 +32662,7 @@ if(o==null){q=A.b([],t.c)
 s=1
 break}m=A
 s=3
-return A.l(n.dH("shops").i9("id, name, category, description, address, slug, whatsapp, scan_count, cover_image_url").e5("owner_id",o).iM("created_at",!0),$async$aC7)
+return A.l(n.dH("shops").i9("id, name, category, description, address, slug, whatsapp, scan_count, cover_image_url, logo_url").e5("owner_id",o).iM("created_at",!0),$async$aC7)
 case 3:q=m.cm(b,!0,t.a)
 s=1
 break
