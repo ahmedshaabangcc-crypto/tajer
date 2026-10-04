@@ -1,0 +1,446 @@
+{
+ "note": "Starter-catalog photos: CC0 / Public Domain Mark only, found via Openverse. Square-cropped and resized.",
+ "photos": {
+  "milk": {
+   "license": "cc0",
+   "source": "flickr",
+   "creator": "Alabama Extension",
+   "title": "Two Glasses of Milk",
+   "landing": "https://www.flickr.com/photos/184594136@N08/52633675811"
+  },
+  "skim-milk": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Foodie Girl",
+   "title": "Milk Bottle",
+   "landing": "https://stocksnap.io/photo/milk-bottle-YFZUAHJV1M"
+  },
+  "yogurt": {
+   "license": "pdm",
+   "source": "flickr",
+   "creator": "USDAgov",
+   "title": "20210902-FNS-UNC-0054",
+   "landing": "https://www.flickr.com/photos/41284017@N08/51430938988"
+  },
+  "feta": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Greek Salad Feta Cheese, Red",
+   "landing": "https://www.rawpixel.com/image/5968295/photo-image-public-domain-plant-red"
+  },
+  "cheddar": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Tim Sullivan",
+   "title": "Cheese Plate",
+   "landing": "https://stocksnap.io/photo/cheese-plate-ISTRWFYIZT"
+  },
+  "brown-eggs": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Krzysztof%20Puszczy%u0144ski",
+   "title": "Brown Eggs",
+   "landing": "https://stocksnap.io/photo/brown-eggs-MGWWJDK49D"
+  },
+  "white-eggs": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "White egg",
+   "landing": "https://www.rawpixel.com/image/6023149/white-egg-free-public-domain-cc0-image"
+  },
+  "rice": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free rice image",
+   "landing": "https://www.rawpixel.com/image/5905176/free-rice-image-public-domain-food-cc0-photo"
+  },
+  "sugar": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "White sugar background",
+   "landing": "https://www.rawpixel.com/image/3338775/free-photo-image-sugar-cc0-creative-commons"
+  },
+  "pasta": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free spaghetti image",
+   "landing": "https://www.rawpixel.com/image/5907896/image-public-domain-food-free"
+  },
+  "tea": {
+   "license": "cc0",
+   "source": "flickr",
+   "creator": "mkniebes",
+   "title": "Formosa Alishan Premium Black",
+   "landing": "https://www.flickr.com/photos/76696276@N00/53680535584"
+  },
+  "coffee": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free portafilter filled ground coffee",
+   "landing": "https://www.rawpixel.com/image/5917271/image-public-domain-coffee-food"
+  },
+  "beef": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Entrecôte, raw beef cut",
+   "landing": "https://www.rawpixel.com/image/6038234/photo-image-public-domain-free"
+  },
+  "sausage": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free close raw sausage image",
+   "landing": "https://www.rawpixel.com/image/5920679/photo-image-public-domain-food-free"
+  },
+  "tomatoes": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Krzysztof%20Puszczy%u0144ski",
+   "title": "Red Tomatoes",
+   "landing": "https://stocksnap.io/photo/red-tomatoes-GB9LU1L8RG"
+  },
+  "cucumbers": {
+   "license": "cc0",
+   "source": "flickr",
+   "creator": "Alabama Extension",
+   "title": "Cucumbers Harvested from AU Fisheries Aquaponics Unit",
+   "landing": "https://www.flickr.com/photos/184594136@N08/51859296155"
+  },
+  "lemons": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Patryk Dziejma",
+   "title": "Yellow Lemons",
+   "landing": "https://stocksnap.io/photo/yellow-lemons-4CIBHHJOHE"
+  },
+  "apples": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Roberta Sorge",
+   "title": "Red Apple",
+   "landing": "https://stocksnap.io/photo/red-apple-D3EPT7EN7I"
+  },
+  "baladi-bread": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": "U.S. Department of Agriculture",
+   "title": "Pita pocket bread",
+   "landing": "https://www.rawpixel.com/image/8733783/photo-image-public-domain-food"
+  },
+  "fino": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "line bread rolls that are",
+   "landing": "https://www.rawpixel.com/image/3338776/free-photo-image-bread-bun-cc0"
+  },
+  "croissant": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "JESHOOTS.com",
+   "title": "Croissant Pastry",
+   "landing": "https://stocksnap.io/photo/croissant-pastry-3020ACDE09"
+  },
+  "pastry": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free chocolate cake slice plate",
+   "landing": "https://www.rawpixel.com/image/5924587/photo-image-background-public-domain-table"
+  },
+  "cake": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Altered Reality",
+   "title": "Birthday Cake",
+   "landing": "https://stocksnap.io/photo/birthday-cake-W7T1J6B7DM"
+  },
+  "painkiller": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Pills & drugs, healthcare photo",
+   "landing": "https://www.rawpixel.com/image/6034902/photo-image-public-domain-covid-medicine"
+  },
+  "masks": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Ian Livesey",
+   "title": "Face Mask",
+   "landing": "https://stocksnap.io/photo/face-mask-JZYVOLWEUO"
+  },
+  "charger": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free phone charger image",
+   "landing": "https://www.rawpixel.com/image/5923136/photo-image-phone-public-domain-white"
+  },
+  "cable": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free USB cable electronic accessory",
+   "landing": "https://www.rawpixel.com/image/5912780/image-public-domain-technology-free"
+  },
+  "earbuds": {
+   "license": "pdm",
+   "source": "flickr",
+   "creator": "superbsavers",
+   "title": "superb savers wireless earbuds",
+   "landing": "https://www.flickr.com/photos/195657162@N08/52063601444"
+  },
+  "earphones": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "iPad Earphones",
+   "landing": "https://www.rawpixel.com/image/5966114/ipad-earphones"
+  },
+  "phone-case": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Black white phone cases, grunge",
+   "landing": "https://www.rawpixel.com/image/11524357/photo-image-paper-iphone-airplanes"
+  },
+  "shirt": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free men's shirt packagaing image",
+   "landing": "https://www.rawpixel.com/image/5924394/photo-image-public-domain-shirt-free"
+  },
+  "shawarma": {
+   "license": "cc0",
+   "source": "flickr",
+   "creator": "Tetizeraz",
+   "title": "Shawarma de frango",
+   "landing": "https://www.flickr.com/photos/195390427@N03/52140128548"
+  },
+  "turkish-coffee": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Travel Coffee Book",
+   "title": "Coffee Cup",
+   "landing": "https://stocksnap.io/photo/coffee-cup-3F1F16DEA8"
+  },
+  "tea-cup": {
+   "license": "cc0",
+   "source": "wordpress",
+   "creator": "Reyes Martínez",
+   "title": "Moroccan mint tea",
+   "landing": "https://wordpress.org/photos/photo/7316225090/"
+  },
+  "juice": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "WDnet Studio",
+   "title": "Lemon Juice",
+   "landing": "https://stocksnap.io/photo/lemon-juice-HKVEPULXQZ"
+  },
+  "cookware": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Cooking pot stove monochrome photo",
+   "landing": "https://www.rawpixel.com/image/5903450/photo-image-public-domain-smoke-kitchen"
+  },
+  "frying-pan": {
+   "license": "cc0",
+   "source": "flickr",
+   "creator": "tessieturnipseed",
+   "title": "cooking frying pan",
+   "landing": "https://www.flickr.com/photos/193084171@N02/54005728270"
+  },
+  "dish-soap": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Catt Liu",
+   "title": "Dishes Sink",
+   "landing": "https://stocksnap.io/photo/dishes-sink-06FF138848"
+  },
+  "roumy": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free parmesan cheese photo",
+   "landing": "https://www.rawpixel.com/image/5927779/photo-image-public-domain-food-free"
+  },
+  "mozzarella": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free tomato mozzarella cheese dish",
+   "landing": "https://www.rawpixel.com/image/5922271/photo-image-public-domain-food-water"
+  },
+  "cream": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Bowl of Ice Cream",
+   "landing": "https://www.rawpixel.com/image/5968220/bowl-ice-cream"
+  },
+  "lentils": {
+   "license": "cc0",
+   "source": "flickr",
+   "creator": "terri_bateman",
+   "title": "Day 072 lentils",
+   "landing": "https://www.flickr.com/photos/134468672@N06/40800367721"
+  },
+  "minced-meat": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free ground beef image",
+   "landing": "https://www.rawpixel.com/image/5928095/photo-image-background-public-domain-kitchen"
+  },
+  "chicken": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free raw chicken be cooked",
+   "landing": "https://www.rawpixel.com/image/5925270/photo-image-public-domain-food-branch"
+  },
+  "chicken-breast": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free raw chicken be cooked",
+   "landing": "https://www.rawpixel.com/image/5914179/photo-image-public-domain-food-branch"
+  },
+  "burger": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free burger image",
+   "landing": "https://www.rawpixel.com/image/5928091/free-burger-image-public-domain-food-cc0-photo"
+  },
+  "potatoes": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Maciej Szlachta",
+   "title": "Potatoes Onions",
+   "landing": "https://stocksnap.io/photo/potatoes-onions-RYSFFCA1QV"
+  },
+  "onions": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Patryk Dziejma",
+   "title": "Onions Garlic",
+   "landing": "https://stocksnap.io/photo/onions-garlic-56SUTM56T5"
+  },
+  "oranges": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Jakub Kapusnak",
+   "title": "Oranges Fruits",
+   "landing": "https://stocksnap.io/photo/oranges-fruits-FJC39SV4ZC"
+  },
+  "pepper": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free close peppercorn wooden spoon",
+   "landing": "https://www.rawpixel.com/image/5927408/photo-image-background-public-domain-wood"
+  },
+  "spices": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Patrycja Tomaszczyk",
+   "title": "Herbs Spices",
+   "landing": "https://stocksnap.io/photo/herbs-spices-6ASMNGB3YI"
+  },
+  "bandage": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": "U.S. Navy Medicine",
+   "title": "Children vaccination, bandaged arm",
+   "landing": "https://www.rawpixel.com/image/8732110/photo-image-public-domain-person-kid"
+  },
+  "kids-outfit": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Matt Bango",
+   "title": "Baby Clothes",
+   "landing": "https://stocksnap.io/photo/baby-clothes-Q2NLOOVQBU"
+  },
+  "sneakers": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "White sneaker pink LED lights",
+   "landing": "https://www.rawpixel.com/image/11524416/white-sneaker-with-pink-led-lights"
+  },
+  "slippers": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Colorful flip flop stack",
+   "landing": "https://www.rawpixel.com/image/6037100/photo-image-public-domain-fashion-free"
+  },
+  "screen-protector": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Negative Space",
+   "title": "Smartphone Mobile",
+   "landing": "https://stocksnap.io/photo/smartphone-mobile-IU6HNPC2NT"
+  },
+  "falafel": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free falafel mash potato image",
+   "landing": "https://www.rawpixel.com/image/5911006/image-public-domain-food-branch"
+  },
+  "glasses": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Water glass. Original Minneapolis Institute",
+   "landing": "https://www.rawpixel.com/image/7656982/photo-image-vintage-art-public-domain"
+  },
+  "mop": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Michal Jarmoluk",
+   "title": "Mop Sweeping",
+   "landing": "https://stocksnap.io/photo/mop-sweeping-J4C1WJDMMU"
+  },
+  "powerbank": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Krzysztof%20Puszczy%u0144ski",
+   "title": "Powerbank Battery",
+   "landing": "https://stocksnap.io/photo/powerbank-battery-LPUWSQBPGV"
+  },
+  "grilled-chicken": {
+   "license": "cc0",
+   "source": "rawpixel",
+   "creator": null,
+   "title": "Free roasted chicken half. cutting",
+   "landing": "https://www.rawpixel.com/image/5904464/photo-image-public-domain-wood-food"
+  },
+  "detergent": {
+   "license": "cc0",
+   "source": "flickr",
+   "creator": "Kim Siever",
+   "title": "Yay! Finally have a working washing machine again! No more spending $20 at the laundromat every other day.",
+   "landing": "https://www.flickr.com/photos/57873306@N00/52703548731"
+  },
+  "softener": {
+   "license": "cc0",
+   "source": "stocksnap",
+   "creator": "Jay Mantri",
+   "title": "Clothes Shirts",
+   "landing": "https://stocksnap.io/photo/clothes-shirts-BD2F94946C"
+  }
+ }
+}
