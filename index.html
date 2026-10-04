@@ -95,6 +95,28 @@
       return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     };
     window.mogtama3yIsIOS = function () { return /iphone|ipad|ipod/i.test(navigator.userAgent); };
+
+    // Phone notifications (Web Push): 'unsupported' | 'default' | 'granted' | 'denied'.
+    window.mogtama3yPushState = function () {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return 'unsupported';
+      return Notification.permission;
+    };
+    // Asks permission and subscribes this device; resolves to the
+    // subscription as JSON text, or '' when refused/unsupported.
+    window.mogtama3yEnablePush = async function (vapidPublicKey) {
+      try {
+        if (window.mogtama3yPushState() === 'unsupported') return '';
+        if (await Notification.requestPermission() !== 'granted') return '';
+        var reg = await navigator.serviceWorker.register('push-sw.js');
+        await navigator.serviceWorker.ready;
+        var raw = atob(vapidPublicKey.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((vapidPublicKey.length + 3) % 4));
+        var key = new Uint8Array(raw.length);
+        for (var i = 0; i < raw.length; i++) key[i] = raw.charCodeAt(i);
+        var sub = (await reg.pushManager.getSubscription()) ||
+          (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key }));
+        return JSON.stringify(sub.toJSON());
+      } catch (e) { return ''; }
+    };
   </script>
 
   <!-- Google Analytics (GA4) -->
