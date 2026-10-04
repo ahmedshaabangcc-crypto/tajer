@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mogtama3y.com/sitemap.xml
