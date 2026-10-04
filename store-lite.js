@@ -67,7 +67,8 @@
     '#store-lite .sl-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}' +
     '#store-lite .sl-note{margin-top:8px;text-align:center;font-size:12px;color:rgba(255,255,255,.55)}' +
     '#store-lite .sl-add{display:block;width:100%;margin-top:10px;padding:11px;border-radius:14px;border:1px dashed rgba(242,182,97,.6);' +
-    'background:rgba(242,182,97,.08);color:#F2B661;font:inherit;font-size:14px;font-weight:700;cursor:pointer}';
+    'background:rgba(242,182,97,.08);color:#F2B661;font:inherit;font-size:14px;font-weight:700;cursor:pointer}' +
+    '#store-lite .sl-was{margin-inline-start:6px;font-size:12px;font-weight:400;color:rgba(255,255,255,.5);text-decoration:line-through}';
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -148,8 +149,9 @@
       var grid = el('div', 'sl-grid');
       products.forEach(function (p) {
         var card = el('div', 'sl-p');
-        if (p.image_url) {
-          var im = el('img', 'sl-img'); im.src = p.image_url; im.alt = p.name; im.loading = 'lazy'; im.decoding = 'async';
+        var cover = (p.images && p.images[0]) || p.image_url;
+        if (cover) {
+          var im = el('img', 'sl-img'); im.src = cover; im.alt = p.name; im.loading = 'lazy'; im.decoding = 'async';
           im.onerror = function () { var ph = el('div', 'sl-ph', '🛍️'); im.replaceWith(ph); };
           card.appendChild(im);
         } else {
@@ -157,7 +159,11 @@
         }
         var b = el('div', 'sl-b');
         b.appendChild(el('div', 'sl-n', p.name));
-        b.appendChild(el('div', 'sl-pr', money(p.price)));
+        var pr = el('div', 'sl-pr', money(p.price));
+        if (p.old_price && Number(p.old_price) > Number(p.price)) {
+          var was = el('span', 'sl-was', money(p.old_price)); pr.appendChild(was);
+        }
+        b.appendChild(pr);
         card.appendChild(b);
         grid.appendChild(card);
       });
@@ -230,7 +236,7 @@
           headers: Object.assign({ 'Content-Type': 'application/json' }, HEADERS),
           body: JSON.stringify({ p_slug: slug })
         }).catch(function () {});
-        return api('shop_products?shop_id=eq.' + shop.id + '&is_available=eq.true&select=id,name,price,image_url,category&order=category.asc.nullslast,name.asc&limit=200')
+        return api('shop_products?shop_id=eq.' + shop.id + '&is_available=eq.true&select=id,name,price,old_price,image_url,images,category&order=category.asc.nullslast,name.asc&limit=200')
           .then(function (products) { render(shop, products || []); })
           .catch(function () { render(shop, []); });
       })
