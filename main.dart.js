@@ -32305,7 +32305,7 @@ var $async$Qx=A.o(function(e,f){if(e===1)return A.p(f,r)
 for(;;)switch(s){case 0:o=$.aY().b
 o===$&&A.a()
 s=3
-return A.l(o.gcL().wO(A.a_(["full_name",b,"phone",d],t.N,t.z),a,A.zW().gta(),c),$async$Qx)
+return A.l(o.gcL().wO(A.a_(["full_name",b,"phone",d],t.N,t.z),a,A.zW().gta()+"/",c),$async$Qx)
 case 3:p=f
 if(p.b==null)throw A.f(A.dc("\u062a\u0639\u0630\u0631 \u0625\u0646\u0634\u0627\u0621 \u0627\u0644\u062d\u0633\u0627\u0628\u060c \u062d\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062e\u0631\u0649."))
 o=p.a!=null
@@ -112460,7 +112460,7 @@ q=3
 l=$.aY().b
 l===$&&A.a()
 s=6
-return A.l(A.UU(l.gcL(),B.ns,A.zW().gta()),$async$DK)
+return A.l(A.UU(l.gcL(),B.ns,A.zW().gta()+"/"),$async$DK)
 case 6:o.push(5)
 s=4
 break
@@ -112607,7 +112607,7 @@ q=3
 l=$.aY().b
 l===$&&A.a()
 s=6
-return A.l(A.UU(l.gcL(),B.ns,A.zW().gta()),$async$DL)
+return A.l(A.UU(l.gcL(),B.ns,A.zW().gta()+"/"),$async$DL)
 case 6:o.push(5)
 s=4
 break
