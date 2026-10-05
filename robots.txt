@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mogtama3y.com/sitemap.xml
+Sitemap: https://tajer.mogtama3y.com/sitemap.xml
