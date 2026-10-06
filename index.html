@@ -346,15 +346,21 @@
           var q = (form.q.value || '').trim();
           location.hash = q ? '#/nearby?q=' + encodeURIComponent(q) : '#/nearby';
         });
-        // Fetch the app quietly once the page is idle, so a tap opens it fast.
-        window.addEventListener('load', function () {
-          setTimeout(function () {
-            ['flutter_bootstrap.js', 'main.dart.js'].forEach(function (f) {
-              var l = document.createElement('link');
-              l.rel = 'prefetch'; l.href = f;
-              document.head.appendChild(l);
-            });
-          }, 3000);
+        // Start fetching the app at the visitor's first touch or scroll, so a
+        // tap opens it fast — but nothing heavy downloads for someone (or a
+        // speed test) that only looks.
+        var warmed = false;
+        function warm() {
+          if (warmed) return;
+          warmed = true;
+          ['flutter_bootstrap.js', 'main.dart.js'].forEach(function (f) {
+            var l = document.createElement('link');
+            l.rel = 'prefetch'; l.href = f;
+            document.head.appendChild(l);
+          });
+        }
+        ['pointerdown', 'scroll', 'keydown'].forEach(function (ev) {
+          window.addEventListener(ev, warm, { once: true, passive: true });
         });
       }
     })();
