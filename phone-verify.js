@@ -37,14 +37,22 @@
     return loading;
   }
 
+  // A fresh element for every attempt: reCAPTCHA refuses to render twice
+  // into the same one ("already been rendered in this element").
+  var slots = 0;
   function slot() {
-    var el = document.getElementById('mg-recaptcha');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'mg-recaptcha';
-      document.body.appendChild(el);
-    }
-    return el;
+    var old = document.querySelectorAll('.mg-recaptcha');
+    for (var i = 0; i < old.length; i++) old[i].remove();
+    var el = document.createElement('div');
+    el.className = 'mg-recaptcha';
+    el.id = 'mg-recaptcha-' + (++slots);
+    document.body.appendChild(el);
+    return el.id;
+  }
+
+  function codeOf(e) {
+    if (e && e.code) return e.code;
+    return 'error:' + String((e && e.message) || e).slice(0, 80);
   }
 
   // phone: 01XXXXXXXXX. Resolves '' when the SMS is on its way, otherwise a
@@ -56,12 +64,14 @@
           try { verifier.clear(); } catch (_) {}
           verifier = null;
         }
-        slot().innerHTML = '';
-        verifier = new firebase.auth.RecaptchaVerifier('mg-recaptcha', { size: 'invisible' });
+        verifier = new firebase.auth.RecaptchaVerifier(slot(), { size: 'invisible' });
         return firebase.auth().signInWithPhoneNumber('+20' + String(phone).replace(/^0/, ''), verifier);
       })
       .then(function (c) { confirmation = c; return ''; })
-      .catch(function (e) { return (e && e.code) || 'error'; });
+      .catch(function (e) {
+        if (window.console) console.warn('phone verify send failed', e);
+        return codeOf(e);
+      });
   };
 
   // Resolves the Firebase ID token for the typed code, or 'ERR:<code>'.
@@ -75,6 +85,6 @@
         firebase.auth().signOut();
         return token;
       })
-      .catch(function (e) { return 'ERR:' + ((e && e.code) || 'error'); });
+      .catch(function (e) { return 'ERR:' + codeOf(e); });
   };
 })();
