@@ -69,7 +69,7 @@
     #splash {
       position: fixed; inset: 0; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 14px;
-      background: #0B1530; font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+      background: #0B1530; font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", "Geeza Pro", system-ui, -apple-system, sans-serif;
       color: #FFFFFF; transition: opacity .25s ease;
     }
     #splash img { width: 84px; height: 84px; border-radius: 22px; box-shadow: 0 6px 24px rgba(11,35,64,.15); }
@@ -85,7 +85,7 @@
 
     /* Instant landing (HTML only) for first-time visitors — see the boot
        script at the end of <body>. */
-    #landing { color: #fff; font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif; max-width: 640px; margin: 0 auto; padding: 0 16px 40px; }
+    #landing { color: #fff; font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", "Geeza Pro", system-ui, -apple-system, sans-serif; max-width: 640px; margin: 0 auto; padding: 0 16px 40px; }
     #landing.off { display: none; }
     #landing a { color: inherit; text-decoration: none; }
     .lp-top { display: flex; align-items: center; gap: 10px; padding: 14px 0; }
@@ -107,8 +107,9 @@
     .lp-btn.ghost { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); color: #fff; margin-top: 10px; }
     .lp-quick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 14px 0 4px; }
     .lp-quick a { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 12px 4px; text-align: center; font-size: 12px; font-weight: 700; }
-    .lp-quick b { display: block; font-size: 20px; margin-bottom: 4px; }
+    .lp-quick svg { display: block; width: 22px; height: 22px; margin: 0 auto 6px; fill: none; stroke: #F2B661; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     h2.lp-h2 { font-size: 18px; margin: 26px 0 12px; font-weight: 800; }
+    .lp-grid, .lp-list, .lp-foot, h2.lp-h2 { content-visibility: auto; contain-intrinsic-size: auto 400px; }
     .lp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .lp-tile { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 16px; overflow: hidden; }
     .lp-tile img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; background: #14244B; }
@@ -213,10 +214,10 @@
       <button class="lp-btn gold" type="submit">بحث</button>
     </form>
     <nav class="lp-quick" aria-label="خدمات سريعة">
-      <a href="#/nearby"><b>📍</b>اكتشف حواليك</a>
-      <a href="#/reports"><b>📣</b>بلاغات حيّك</a>
-      <a href="#/my-address"><b>🏠</b>عنوانك الإلكتروني</a>
-      <a href="#/neighborhoods"><b>👥</b>جروب الحي</a>
+      <a href="#/nearby"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>اكتشف حواليك</a>
+      <a href="#/reports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 8a5 5 0 0 1 0 8"/></svg>بلاغات حيّك</a>
+      <a href="#/my-address"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>عنوانك الإلكتروني</a>
+      <a href="#/neighborhoods"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5A5 5 0 0 1 21 19"/></svg>جروب الحي</a>
     </nav>
     <h2 class="lp-h2">أقسام الحي والخدمات</h2>
     <div class="lp-grid">
@@ -303,7 +304,7 @@
           '<header class="lp-top"><img src="landing/shops.webp" alt="" width="40" height="40">' +
           '<div class="lp-brand">متجري<small>من مُجتمعي</small></div><a class="lp-login" href="#/login">دخول</a></header>' +
           '<section class="lp-hero square"><img src="landing/shops-big.webp" alt="" width="600" height="600" fetchpriority="high">' +
-          '<div class="lp-copy"><h1 class="lp-h1">محلك أونلاين ببلاش 🛍️</h1>' +
+          '<div class="lp-copy"><h1 class="lp-h1">محلك أونلاين ببلاش</h1>' +
           '<p class="lp-sub">متجر باسم محلك، ومنتجاتك بالصور والأسعار، والطلبات توصلك على واتساب — في دقيقتين ومن غير عمولة.</p></div></section>' +
           '<a class="lp-btn gold" href="#/login" style="margin-top:16px">سجّل محلك دلوقتي</a>' +
           '<a class="lp-btn ghost" href="#/login">عندي حساب — تسجيل الدخول</a>' +
