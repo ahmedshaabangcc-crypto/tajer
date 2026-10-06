@@ -170,13 +170,22 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-LW5F70SQN3');
-    window.addEventListener('load', function () {
-      setTimeout(function () {
+    // Loaded at the visitor's first touch/scroll, or 7 s after load,
+    // whichever comes first — the queued events above are sent then.
+    (function () {
+      var done = false;
+      function loadGa() {
+        if (done) return;
+        done = true;
         var s = document.createElement('script');
         s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-LW5F70SQN3';
         document.head.appendChild(s);
-      }, 2500);
-    });
+      }
+      ['pointerdown', 'scroll', 'keydown'].forEach(function (ev) {
+        window.addEventListener(ev, loadGa, { once: true, passive: true });
+      });
+      window.addEventListener('load', function () { setTimeout(loadGa, 7000); });
+    })();
   </script>
 </head>
 <body>
