@@ -62,7 +62,16 @@
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://pxiabifybakbsqlycffc.supabase.co" crossorigin>
+  <script>
+    // The backend preconnect is skipped on this machine (local previews and
+    // the local-only demo build never talk to the backend).
+    window.mogtama3yIsLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+    if (!window.mogtama3yIsLocal) {
+      var pc = document.createElement('link');
+      pc.rel = 'preconnect'; pc.href = 'https://pxiabifybakbsqlycffc.supabase.co'; pc.crossOrigin = '';
+      document.head.appendChild(pc);
+    }
+  </script>
 
   <!-- Instant splash: plain HTML painted on the first frame, so someone who
        scans a shop's QR on mobile data sees something right away instead of
@@ -179,6 +188,8 @@
     // Loaded at the visitor's first touch/scroll, or 7 s after load,
     // whichever comes first — the queued events above are sent then.
     (function () {
+      // No analytics from local previews / the local demo build.
+      if (window.mogtama3yIsLocal) return;
       var done = false;
       function loadGa() {
         if (done) return;
@@ -273,6 +284,8 @@
         var h = location.hash || '';
         if (h && h !== '#' && h !== '#/') return true;
         if (/[?&](code|error|error_description)=/.test(location.search)) return true;
+        // Local demo build links (http://localhost:8737/?role=…) open the app.
+        if (window.mogtama3yIsLocal && /[?&]role=/.test(location.search)) return true;
         if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) return true;
         try {
           // supabase_flutter keeps the session under
