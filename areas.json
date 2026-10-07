@@ -1,0 +1,27 @@
+[
+ {
+  "path": "/cairo/nasr-city/",
+  "name": "مدينة نصر",
+  "city": "القاهرة"
+ },
+ {
+  "path": "/cairo/maadi/",
+  "name": "المعادي",
+  "city": "القاهرة"
+ },
+ {
+  "path": "/cairo/heliopolis/",
+  "name": "مصر الجديدة",
+  "city": "القاهرة"
+ },
+ {
+  "path": "/giza/mohandessin/",
+  "name": "المهندسين",
+  "city": "الجيزة"
+ },
+ {
+  "path": "/alexandria/smouha/",
+  "name": "سموحة",
+  "city": "الإسكندرية"
+ }
+]
