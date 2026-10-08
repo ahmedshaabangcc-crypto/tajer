@@ -294,6 +294,9 @@
         var h = location.hash || '';
         if (h && h !== '#' && h !== '#/') return true;
         if (/[?&](code|error|error_description)=/.test(location.search)) return true;
+        // «الصفحة الرئيسية» from inside the app (?home=1): show this page even
+        // to a signed-in user / installed app / demo role.
+        if (/[?&]home=1(&|$)/.test(location.search)) return false;
         // Local demo build links (http://localhost:8737/?role=…) open the app.
         if (window.mogtama3yIsLocal && /[?&]role=/.test(location.search)) return true;
         if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) return true;
@@ -418,6 +421,23 @@
         var foot = landing.querySelector('.lp-foot');
         landing.innerHTML = pages[flavor];
         landing.appendChild(foot);
+      }
+
+      // Opened with ?home=1 by someone already signed in (or a demo role):
+      // the start buttons lead back into the app instead of to sign-in.
+      if (/[?&]home=1(&|$)/.test(location.search)) {
+        var inApp = window.mogtama3yIsLocal && /[?&]role=/.test(location.search);
+        try {
+          for (var k = 0; k < localStorage.length; k++) {
+            if (/sb-.+-auth-token/.test(localStorage.key(k) || '')) inApp = true;
+          }
+        } catch (e) {}
+        if (inApp) {
+          var back = flavor === 'ittihad' ? '#/union' : (flavor === 'tajer' ? '#/merchant' : '#/home');
+          landing.querySelectorAll('a[href="#/login"]').forEach(function (a) { a.setAttribute('href', back); });
+          var top = landing.querySelector('.lp-login');
+          if (top) top.textContent = 'لوحتي';
+        }
       }
 
       if (wantsApp()) {
