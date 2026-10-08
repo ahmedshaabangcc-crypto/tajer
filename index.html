@@ -134,6 +134,16 @@
     .lp-list b { display: block; font-size: 15px; margin-bottom: 4px; color: #F2B661; }
     .lp-list p, .lp-steps li { margin: 0; font-size: 13.5px; line-height: 1.7; color: rgba(255,255,255,.8); }
     .lp-steps { margin: 0; padding-inline-start: 22px; display: grid; gap: 8px; }
+    .lp-yt { display: block; width: 100%; background: none; border: 0; color: #F2B661; font: inherit; font-size: 13px; font-weight: 700; padding: 8px 0 2px; cursor: pointer; text-align: center; }
+    .lp-vids { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; content-visibility: auto; contain-intrinsic-size: auto 420px; }
+    .lp-vid { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; overflow: hidden; padding: 0; color: #fff; font: inherit; cursor: pointer; text-align: start; }
+    .lp-vid img { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; background: #14244B; }
+    .lp-vid span { display: block; padding: 7px 8px 9px; font-size: 12px; font-weight: 700; line-height: 1.5; }
+    #lp-modal { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; z-index: 1000; padding: 12px; }
+    #lp-modal[hidden] { display: none; }
+    #lp-modal .box { width: min(92vw, calc((100vh - 90px) * 9 / 16)); aspect-ratio: 9 / 16; background: #000; border-radius: 14px; overflow: hidden; }
+    #lp-modal iframe { border: 0; width: 100%; height: 100%; display: block; }
+    #lp-modal .close { background: #F2B661; color: #0B1530; border: 0; border-radius: 999px; padding: 10px 22px; font: inherit; font-weight: 800; cursor: pointer; }
     .lp-note { font-size: 12px; color: rgba(255,255,255,.55); line-height: 1.7; margin-top: 18px; }
     .lp-foot { margin-top: 30px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12); display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12.5px; color: rgba(255,255,255,.7); }
     .lp-foot a { text-decoration: underline; text-underline-offset: 3px; }
@@ -348,8 +358,11 @@
           '<li>رئيس الاتحاد (أو أي مالك) يسجّل العمارة ويبقى مؤسسها.</li><li>ياخد كود دعوة ويبعته في جروب العمارة.</li>' +
           '<li>السكان ينضموا بالكود، والرئيس يوافق على كل شقة.</li></ol>' +
           '<a class="lp-btn gold" href="#/login" style="margin-top:16px">أسّس اتحاد عمارتك</a>' +
+          '<button class="lp-yt" type="button" data-yt="TGZwLWd4bOQ">▶ شوف الشرح (30 ثانية)</button>' +
           '<a class="lp-btn ghost" href="#/login">عندي كود دعوة من الرئيس</a>' +
+          '<button class="lp-yt" type="button" data-yt="mo00sgy4QhQ">▶ شوف الشرح (30 ثانية)</button>' +
           '<a class="lp-btn ghost" href="#/login">أنا مستأجر ومعايا كود من المالك</a>' +
+          '<button class="lp-yt" type="button" data-yt="Xr52M5jteLo">▶ شوف الشرح (30 ثانية)</button>' +
           '<h2 class="lp-h2">هتقدر تعمل إيه</h2><ul class="lp-list">' +
           '<li><b>مستحقات الصيانة</b><p>إصدار المستحقات لكل الشقق مرة واحدة، والسكان يدفعوا من محفظتهم، وكله متسجّل.</p></li>' +
           '<li><b>قرارات وانتخابات</b><p>تصويت مجلس الإدارة على القرارات، وانتخابات الرئاسة بصوت لكل شقة ونصاب واضح.</p></li>' +
@@ -357,8 +370,50 @@
           '<li><b>سكان موثقين</b><p>محدش يدخل العمارة إلا بموافقة الرئيس، والمالك يضيف مستأجره بكود خاص.</p></li>' +
           '<li><b>تصاريح زوار وحارس</b><p>تصريح QR للزائر بمدة محددة، والحارس يتحقق منه من موبايله.</p></li>' +
           '<li><b>إعلانات ودردشة وSOS</b><p>إعلانات رسمية من المجلس، دردشة للعمارة، وزر استغاثة ينبّه الجيران.</p></li></ul>' +
+          '<h2 class="lp-h2">فيديوهات الشرح</h2><div class="lp-vids">' +
+          '<button class="lp-vid" type="button" data-yt="TGZwLWd4bOQ"><img src="https://i.ytimg.com/vi/TGZwLWd4bOQ/hqdefault.jpg" alt="" width="240" height="427" loading="lazy"><span>أسّس اتحاد عمارتك</span></button>' +
+          '<button class="lp-vid" type="button" data-yt="mo00sgy4QhQ"><img src="https://i.ytimg.com/vi/mo00sgy4QhQ/hqdefault.jpg" alt="" width="240" height="427" loading="lazy"><span>انضم لعمارتك بكود الدعوة</span></button>' +
+          '<button class="lp-vid" type="button" data-yt="Xr52M5jteLo"><img src="https://i.ytimg.com/vi/Xr52M5jteLo/hqdefault.jpg" alt="" width="240" height="427" loading="lazy"><span>ضيف المستأجر بتاعك</span></button>' +
+          '<button class="lp-vid" type="button" data-yt="6u4XvP3PVnc"><img src="https://i.ytimg.com/vi/6u4XvP3PVnc/hqdefault.jpg" alt="" width="240" height="427" loading="lazy"><span>انتخبوا رئيس الاتحاد</span></button>' +
+          '<button class="lp-vid" type="button" data-yt="X4dmxRNUb2M"><img src="https://i.ytimg.com/vi/X4dmxRNUb2M/hqdefault.jpg" alt="" width="240" height="427" loading="lazy"><span>تصريح دخول للزائر</span></button>' +
+          '<button class="lp-vid" type="button" data-yt="-SAabWeeJuo"><img src="https://i.ytimg.com/vi/-SAabWeeJuo/hqdefault.jpg" alt="" width="240" height="427" loading="lazy"><span>زرار الطوارئ SOS</span></button>' +
+          '</div>' +
           '<p class="lp-note">الأدوات دي بتساعدكم تنظموا شغل الاتحاد، ومش بديل عن القواعد القانونية لاتحادكم.</p>'
       };
+      function playVideo(id) {
+        var m = document.getElementById('lp-modal');
+        if (!m) {
+          m = document.createElement('div');
+          m.id = 'lp-modal';
+          m.innerHTML = '<div class="box"></div><button class="close" type="button">قفل ✕</button>';
+          m.addEventListener('click', function (e) { if (e.target === m || e.target.className === 'close') closeVideo(); });
+          document.body.appendChild(m);
+        }
+        var f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?rel=0&playsinline=1&modestbranding=1&autoplay=1';
+        f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+        f.setAttribute('allowfullscreen', '');
+        f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+        f.title = 'فيديو الشرح';
+        var box = m.querySelector('.box');
+        box.innerHTML = '';
+        box.appendChild(f);
+        m.hidden = false;
+      }
+      function closeVideo() {
+        var m = document.getElementById('lp-modal');
+        if (!m) return;
+        m.querySelector('.box').innerHTML = ''; // removing the iframe stops playback
+        m.hidden = true;
+      }
+      landing.addEventListener('click', function (e) {
+        var b = e.target.closest && e.target.closest('[data-yt]');
+        if (!b) return;
+        e.preventDefault();
+        playVideo(b.getAttribute('data-yt'));
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeVideo(); });
+
       if (pages[flavor]) {
         var foot = landing.querySelector('.lp-foot');
         landing.innerHTML = pages[flavor];
