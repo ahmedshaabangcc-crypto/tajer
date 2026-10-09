@@ -258,6 +258,7 @@
       <a class="lp-tile" href="#/halls"><img src="landing/halls.webp" alt="" width="240" height="240" loading="lazy"><span>قاعات المناسبات</span><small>أفراح وخطوبة وحفلات</small></a>
       <a class="lp-tile" href="#/pets"><img src="landing/pets.webp" alt="" width="240" height="240" loading="lazy"><span>الحيوانات الأليفة</span><small>بيع وتبني ومفقودات</small></a>
       <a class="lp-tile" href="#/kids"><img src="landing/kids.webp" alt="" width="240" height="240" loading="lazy"><span>مستلزمات الأطفال</span><small>جديد ومستعمل وببلاش</small></a>
+      <a class="lp-tile" href="#/masjid"><img src="masjid_icons/Icon-192.png" alt="" width="240" height="240" loading="lazy"><span>المساجد</span><small>مواقيت الصلاة ومساجد حيّك</small></a>
     </div>
     <a class="lp-btn gold" href="#/login" style="margin-top:22px">سجّل دخول أو اعمل حساب</a>
     <footer class="lp-foot">
@@ -265,6 +266,7 @@
       <a href="#/support">الدعم</a>
       <a href="/tajer/">متجري للتجار</a>
       <a href="/ittihad/">اتحاد الملاك</a>
+      <a href="/masjid/">مسجدي</a>
       <a href="/balagh/">بلّغ عن مشكلة</a>
       <a href="/dalil/">دليل المحلات</a>
       <a href="/terms/">الشروط</a>
@@ -282,8 +284,8 @@
   <script>
     (function () {
       var host = location.hostname;
-      var flavor = /^tajer\./.test(host) ? 'tajer' : (/^ittihad\./.test(host) ? 'ittihad' : 'mogtama3y');
-      var forced = /[?&]flavor=(tajer|ittihad|mogtama3y)/.exec(location.search);
+      var flavor = /^tajer\./.test(host) ? 'tajer' : (/^ittihad\./.test(host) ? 'ittihad' : (/^masjid\./.test(host) ? 'masjid' : 'mogtama3y'));
+      var forced = /[?&]flavor=(tajer|ittihad|masjid|mogtama3y)/.exec(location.search);
       if (forced) flavor = forced[1];
       var landing = document.getElementById('landing');
       var splash = document.getElementById('splash');
@@ -381,7 +383,26 @@
           '<button class="lp-vid" type="button" data-yt="X4dmxRNUb2M"><img src="https://i.ytimg.com/vi/X4dmxRNUb2M/hqdefault.jpg" alt="" width="240" height="427" loading="lazy"><span>تصريح دخول للزائر</span></button>' +
           '<button class="lp-vid" type="button" data-yt="-SAabWeeJuo"><img src="https://i.ytimg.com/vi/-SAabWeeJuo/hqdefault.jpg" alt="" width="240" height="427" loading="lazy"><span>زرار الطوارئ SOS</span></button>' +
           '</div>' +
-          '<p class="lp-note">الأدوات دي بتساعدكم تنظموا شغل الاتحاد، ومش بديل عن القواعد القانونية لاتحادكم.</p>'
+          '<p class="lp-note">الأدوات دي بتساعدكم تنظموا شغل الاتحاد، ومش بديل عن القواعد القانونية لاتحادكم.</p>',
+        masjid:
+          '<header class="lp-top"><img src="icons/Icon-192.png" alt="" width="40" height="40">' +
+          '<div class="lp-brand">مسجدي<small>كل مساجد حيّك</small></div><a class="lp-login" href="#/login">دخول</a></header>' +
+          '<section class="lp-hero square"><img src="icons/Icon-512.png" alt="" width="600" height="600" fetchpriority="high">' +
+          '<div class="lp-copy"><h1 class="lp-h1">مسجدي — كل مساجد حيّك</h1>' +
+          '<p class="lp-sub">مواقيت الصلاة بالدقيقة لمكانك، وأقرب مسجد ليك، ومواعيد الإقامة وخطبة الجمعة والدروس وحلقات القرآن — ببلاش.</p></div></section>' +
+          '<a class="lp-btn gold" href="#/masjid" style="margin-top:16px">مواقيت الصلاة وأقرب مسجد</a>' +
+          '<a class="lp-btn ghost" href="#/login">إمام أو خطيب أو أمين مسجد؟ سجّل مسجدك</a>' +
+          '<h2 class="lp-h2">هتلاقي إيه؟</h2><ul class="lp-list">' +
+          '<li><b>مواقيت الصلاة</b><p>بحساب الهيئة المصرية العامة للمساحة وبتوقيت مصر، مع عدّاد للصلاة الجاية — من غير نت تقريباً.</p></li>' +
+          '<li><b>صفحة لكل مسجد</b><p>مواعيد الإقامة، خطبة الجمعة والخطيب، الإعلانات وصلاة الجنازة، والدروس وحلقات التحفيظ للرجال والسيدات والأطفال.</p></li>' +
+          '<li><b>تابع مسجدك</b><p>إعلانات المسجد والدروس الجديدة وصلاة الجنازة توصلك إشعار على موبايلك.</p></li>' +
+          '<li><b>احتياجات المسجد</b><p>مروحة، سجاد، صيانة… كل احتياج بمبلغه، وسجّل «هساهم بكذا»، والمسجد بيأكد اللي وصله قدام الكل.</p></li>' +
+          '<li><b>كفالة الأيتام ومسابقات القرآن</b><p>برامج كفالة من غير أي بيانات عن الأطفال، ومسابقات حفظ بالتسجيل والنتايج.</p></li></ul>' +
+          '<h2 class="lp-h2">لإدارة المسجد</h2><ol class="lp-steps">' +
+          '<li>اعمل حساب وافتح صفحة مسجدك (أو ضيفه لو مش موجود).</li><li>اضغط «أنا مسؤول عن المسجد ده» واختار صفتك: إمام، خطيب، أمين المسجد أو عضو مجلس إدارة.</li>' +
+          '<li>بعد المراجعة، انشر المواعيد والإعلانات والاحتياجات وضيف مساعدين.</li></ol>' +
+          '<a class="lp-btn gold" href="#/login" style="margin-top:16px">ابدأ دلوقتي ببلاش</a>' +
+          '<p class="lp-note">التطبيق مابيستلمش فلوس: التبرعات والكفالات بتتدفع للمسجد مباشرة، والتطبيق بينظم التعهدات بس.</p>'
       };
       function playVideo(id) {
         var m = document.getElementById('lp-modal');
@@ -433,7 +454,7 @@
           }
         } catch (e) {}
         if (inApp) {
-          var back = flavor === 'ittihad' ? '#/union' : (flavor === 'tajer' ? '#/merchant' : '#/home');
+          var back = flavor === 'ittihad' ? '#/union' : (flavor === 'tajer' ? '#/merchant' : (flavor === 'masjid' ? '#/masjid' : '#/home'));
           landing.querySelectorAll('a[href="#/login"]').forEach(function (a) { a.setAttribute('href', back); });
           var top = landing.querySelector('.lp-login');
           if (top) top.textContent = 'لوحتي';
