@@ -284,7 +284,7 @@
   <script>
     (function () {
       var host = location.hostname;
-      var flavor = /^tajer\./.test(host) ? 'tajer' : (/^ittihad\./.test(host) ? 'ittihad' : (/^masjid\./.test(host) ? 'masjid' : 'mogtama3y'));
+      var flavor = /^tajer\./.test(host) ? 'tajer' : (/^ittihad\./.test(host) ? 'ittihad' : (/^masjidi?\./.test(host) ? 'masjid' : 'mogtama3y'));
       var forced = /[?&]flavor=(tajer|ittihad|masjid|mogtama3y)/.exec(location.search);
       if (forced) flavor = forced[1];
       var landing = document.getElementById('landing');
