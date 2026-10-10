@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>درس أونلاين — مسجدي</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0B1530">
+<link rel="icon" type="image/png" href="/favicon.png">
+<style>
+:root{color-scheme:dark;--night:#0B1530;--mid:#14244B;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.14);--gold:#F2B661;--sky:#5D77A8;--ok:#10B981;--bad:#EF4444;--ink:#fff;--soft:rgba(255,255,255,.72);--mute:rgba(255,255,255,.5)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--night);color:var(--ink);font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,"Noto Sans Arabic","Geeza Pro",system-ui,-apple-system,sans-serif;line-height:1.6}
+body{display:flex;flex-direction:column;min-height:100dvh}
+a{color:var(--gold)}
+button{font:inherit;cursor:pointer;border:0;border-radius:14px;padding:12px 16px;font-weight:700}
+button:disabled{opacity:.5;cursor:default}
+.btn{background:var(--gold);color:var(--night)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:var(--bad);color:#fff}
+.btn.small{padding:6px 10px;font-size:12.5px;border-radius:10px}
+header.top{display:flex;align-items:center;gap:10px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));border-bottom:1px solid var(--line);background:var(--mid)}
+header.top .t{flex:1;min-width:0}
+header.top .t b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top .t small{color:var(--soft);font-size:12px}
+.live{display:none;background:var(--bad);color:#fff;font-size:11px;font-weight:800;border-radius:6px;padding:2px 7px;letter-spacing:.5px}
+.live.on{display:inline-block}
+.back{font-size:13px;text-decoration:none;white-space:nowrap}
+main{flex:1;display:flex;flex-direction:column;min-height:0}
+.panel{max-width:520px;margin:28px auto;padding:20px;background:var(--card);border:1px solid var(--line);border-radius:18px;text-align:center;width:calc(100% - 32px)}
+.panel h1{font-size:19px;margin:0 0 6px}
+.panel p{color:var(--soft);font-size:14px;margin:6px 0}
+.panel .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.note{font-size:12px;color:var(--mute)}
+.spin{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:s 1s linear infinite;margin:10px auto}
+@keyframes s{to{transform:rotate(360deg)}}
+#room{display:none;flex:1;flex-direction:column;min-height:0}
+#room.on{display:flex}
+.banner{display:none;background:#B45309;color:#fff;text-align:center;font-size:13px;padding:6px}
+.banner.on{display:block}
+#stage{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.main-tile{position:relative;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:16/9;max-height:56vh;display:flex;align-items:center;justify-content:center}
+.audio-mode .main-tile{background:var(--card);border:1px solid var(--line);aspect-ratio:auto;padding:26px 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.tile{position:relative;border-radius:14px;overflow:hidden;background:var(--card);border:2px solid var(--line);min-height:96px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:8px}
+.tile.speaking,.main-tile.speaking{border-color:var(--ok);box-shadow:0 0 0 2px var(--ok)}
+.tile video,.main-tile video{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.av{width:58px;height:58px;border-radius:50%;background:var(--sky);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;z-index:1}
+.main-tile .av{width:88px;height:88px;font-size:36px}
+.nm{z-index:1;font-size:12.5px;margin-top:6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:rgba(0,0,0,.45);padding:1px 8px;border-radius:8px}
+.tag{font-size:10.5px;color:var(--gold);z-index:1}
+.muted-ic{position:absolute;top:6px;left:6px;z-index:2;font-size:13px}
+.hint{color:var(--mute);font-size:12.5px;text-align:center}
+#bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px;padding-bottom:max(10px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--mid)}
+#bar button{min-width:52px;padding:10px 12px;background:rgba(255,255,255,.1);color:#fff;font-size:13px}
+#bar button.on{background:var(--gold);color:var(--night)}
+#bar button.leave{background:var(--bad)}
+#bar button[hidden]{display:none}
+.badge{display:inline-block;min-width:18px;background:var(--bad);color:#fff;border-radius:9px;font-size:11px;padding:0 5px;margin-inline-start:4px}
+.badge:empty{display:none}
+.sheet{display:none;position:fixed;inset:auto 0 0 0;max-height:72dvh;background:var(--mid);border-top:1px solid var(--line);border-radius:18px 18px 0 0;z-index:20;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+.sheet.on{display:flex}
+.sheet header{display:flex;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.sheet header b{flex:1}
+.sheet .body{overflow-y:auto;padding:10px 14px;flex:1}
+.item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.item .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg{margin:6px 0;font-size:14px;word-wrap:break-word}
+.msg b{color:var(--gold);font-size:12.5px;display:block}
+.msg.host b::after{content:" • إدارة المسجد";color:var(--ok);font-weight:400}
+.chatform{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line)}
+.chatform input{flex:1;min-width:0;background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;border-radius:12px;padding:10px;font:inherit}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#000c;color:#fff;padding:9px 14px;border-radius:12px;font-size:13.5px;z-index:40;display:none;max-width:90vw;text-align:center}
+#toast.on{display:block}
+#tap{display:none;position:fixed;inset:0;background:rgba(11,21,48,.86);z-index:30;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+#tap.on{display:flex}
+#tap button{font-size:18px;padding:16px 26px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (min-width:760px){#stage{padding:18px 8vw}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="t"><b id="title">درس أونلاين</b><small id="sub">مسجدي</small></div>
+  <span class="live" id="liveBadge">مباشر</span>
+  <a class="back" id="back" href="/#/masjid">ارجع للمسجد ←</a>
+</header>
+<main>
+  <section id="screen" class="panel" aria-live="polite">
+    <div class="spin"></div>
+    <p>بنجهّز الدرس…</p>
+  </section>
+  <section id="room" aria-label="الدرس">
+    <div class="banner" id="netBanner">الاتصال ضعيف — بنحاول نرجّعك…</div>
+    <div id="stage"></div>
+    <nav id="bar">
+      <button id="bMic" hidden aria-pressed="false">🎙️ المايك</button>
+      <button id="bCam" hidden aria-pressed="false">📷 الكاميرا</button>
+      <button id="bHand" hidden aria-pressed="false">✋ ارفع إيدك</button>
+      <button id="bVideoOff" hidden aria-pressed="false">🔈 صوت بس</button>
+      <button id="bChat">💬 الشات<span class="badge" id="chatBadge"></span></button>
+      <button id="bHost" hidden>🛡️ الإدارة<span class="badge" id="handBadge"></span></button>
+      <button id="bLeave" class="leave">خروج</button>
+    </nav>
+  </section>
+</main>
+
+<div class="sheet" id="chatSheet" role="dialog" aria-label="شات الدرس">
+  <header><b>شات الدرس <small class="note">— مش بيتحفظ</small></b><button class="btn ghost small" data-close="chatSheet">إغلاق</button></header>
+  <div class="body" id="chatList"></div>
+  <form class="chatform" id="chatForm"><input id="chatInput" maxlength="300" autocomplete="off" placeholder="اكتب رسالة…" aria-label="رسالة"><button class="btn small" type="submit">ابعت</button></form>
+</div>
+
+<div class="sheet" id="hostSheet" role="dialog" aria-label="إدارة الدرس">
+  <header><b>إدارة الدرس</b><button class="btn ghost small" data-close="hostSheet">إغلاق</button></header>
+  <div class="body">
+    <p class="note" style="margin:0 0 6px">✋ الإيد المرفوعة</p>
+    <div id="handsList"><p class="hint">مفيش حد رافع إيده</p></div>
+    <p class="note" style="margin:14px 0 6px">👥 في الدرس دلوقتي</p>
+    <div id="peopleList"></div>
+    <div style="margin-top:16px"><button class="btn danger" id="bEnd" style="width:100%">إنهاء الدرس للكل</button></div>
+  </div>
+</div>
+
+<div id="tap"><p>المتصفح محتاج ضغطة عشان يشغّل الصوت</p><button class="btn" id="bTap">🔊 اضغط عشان تسمع</button></div>
+<div id="toast" role="status"></div>
+<div id="audioSink" class="sr" aria-hidden="true"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.22.3/dist/livekit-client.umd.js" integrity="sha384-G/xxtkVytOx/ia9Q8MXxM+V0ohsaY1fZAgVP3iSGTPz4wJ0s3+ulJNKXh/gnzEDZ" crossorigin="anonymous" defer></script>
+<script src="live.js" defer></script>
+</body>
+</html>
