@@ -23,6 +23,8 @@ export function support() {
     secure: !!window.isSecureContext,
     ios: isIOS(),
     memory: navigator.deviceMemory || 0,
+    isolated: window.crossOriginIsolated === true,
+    cores: navigator.hardwareConcurrency || 0,
   };
 }
 
@@ -41,17 +43,35 @@ function rejectAll(err) {
 function ensureWorker() {
   if (worker) return worker;
   if (typeof Worker === 'undefined') throw fail('unsupported', 'no Worker');
-  worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
+  // A blob worker that imports worker.js: a blob worker inherits the page's
+  // cross-origin isolation (/tutor/), whereas a worker script served
+  // without a COEP header of its own is refused in an isolated page.
+  const src = new URL('./worker.js', import.meta.url).href;
+  try {
+    const blob = new Blob([`import ${JSON.stringify(src)};`], { type: 'text/javascript' });
+    worker = new Worker(URL.createObjectURL(blob), { type: 'module' });
+  } catch (_) {
+    worker = new Worker(src, { type: 'module' });
+  }
   worker.onmessage = (ev) => {
     const m = ev.data || {};
     if (m.type === 'progress') {
       if (progressCb) try { progressCb(m.loaded, m.total); } catch (_) {}
     } else if (m.type === 'ready') {
-      modelInfo = { device: m.device, dtype: m.dtype, ms: m.ms, cached: !!m.cached };
+      modelInfo = {
+        device: m.device, backend: m.backend || '', dtype: m.dtype, ms: m.ms, warmMs: m.warmMs || 0,
+        threads: m.threads || 0, isolated: !!m.isolated, cached: !!m.cached,
+      };
       if (loadWaiters) { loadWaiters.resolve(modelInfo); loadWaiters = null; }
     } else if (m.type === 'result') {
       const p = pending.get(m.id);
-      if (p) { pending.delete(m.id); p.resolve({ text: m.text || '', ms: m.ms || 0, seconds: m.seconds || 0 }); }
+      if (p) {
+        pending.delete(m.id);
+        p.resolve({
+          text: m.text || '', ms: m.ms || 0, seconds: m.seconds || 0, frames: m.frames || 0, tokens: m.tokens || 0,
+          retried: !!m.retried, encMs: m.encMs || 0, decMs: m.decMs || 0, featMs: m.featMs || 0,
+        });
+      }
     } else if (m.type === 'error') {
       const err = fail(m.code || 'failed', m.message);
       if (m.id != null && pending.has(m.id)) { pending.get(m.id).reject(err); pending.delete(m.id); }
@@ -70,7 +90,7 @@ function ensureWorker() {
 
 export function modelReady() { return !!modelInfo; }
 
-export function loadModel(onProgress, prefer) {
+export function loadModel(onProgress, prefer, threads) {
   progressCb = onProgress || null;
   if (modelInfo) return Promise.resolve(modelInfo);
   if (loadWaiters) return loadWaiters.promise;
@@ -78,7 +98,7 @@ export function loadModel(onProgress, prefer) {
   const promise = new Promise((a, b) => { resolve = a; reject = b; });
   loadWaiters = { promise, resolve, reject };
   try {
-    ensureWorker().postMessage({ type: 'load', prefer: prefer || 'auto' });
+    ensureWorker().postMessage({ type: 'load', prefer: prefer || 'auto', threads: threads || 0 });
   } catch (e) {
     loadWaiters = null;
     return Promise.reject(e.code ? e : fail('unsupported', String(e)));
@@ -86,12 +106,15 @@ export function loadModel(onProgress, prefer) {
   return promise;
 }
 
-export function transcribe(audio, rate) {
+/** opts: {words: expected word count (bounds the decoder), full: force the
+ * classic 30 s window}. The samples are transferred, not copied. */
+export function transcribe(audio, rate, opts) {
   const id = ++seq;
+  const o = opts || {};
   return new Promise((resolve, reject) => {
     pending.set(id, { resolve, reject });
     try {
-      ensureWorker().postMessage({ type: 'transcribe', id, audio, rate }, [audio.buffer]);
+      ensureWorker().postMessage({ type: 'transcribe', id, audio, rate, words: o.words || 0, full: !!o.full }, [audio.buffer]);
     } catch (e) {
       pending.delete(id);
       reject(e.code ? e : fail('failed', String(e)));
@@ -163,8 +186,10 @@ function decode(ctx, ab) {
 
 /**
  * Starts recording. Must be called from a tap (iOS needs the AudioContext
- * created inside the gesture). opts: {maxMs, autoStop, onLevel(level 0..1),
- * onAutoStop(reason)}.
+ * created inside the gesture). opts: {maxMs, autoStop, minMs, onLevel(level
+ * 0..1), onAutoStop(reason)}. Auto-stop: 0.8 s of silence once the
+ * recitation has gone on for minMs (the ayah's shortest plausible length),
+ * 1.6 s before that (a breath between words mustn't end it).
  */
 export async function startRecording(opts) {
   cancelRecording();
@@ -217,9 +242,10 @@ export async function startRecording(opts) {
     throw fail('unsupported', 'no recorder');
   }
 
-  // Level meter + optional stop after ~1.6 s of silence once speech began.
+  // Level meter + optional stop after a short silence once speech began.
   const buf = new Float32Array(analyser.fftSize);
-  let noise = 0.005, spoke = false, quietFor = 0, t = 0;
+  let noise = 0.005, spoke = false, quietFor = 0, t = 0, spokeAt = 0;
+  const minMs = Math.max(0, o.minMs || 0);
   r.timers.push(setInterval(() => {
     analyser.getFloatTimeDomainData(buf);
     let s = 0;
@@ -228,9 +254,10 @@ export async function startRecording(opts) {
     t += 100;
     if (t <= 400) noise = Math.max(noise, rms);
     const loud = rms > Math.max(0.015, noise * 2.5);
-    if (loud) { spoke = true; quietFor = 0; } else quietFor += 100;
+    if (loud) { if (!spoke) spokeAt = t; spoke = true; quietFor = 0; } else quietFor += 100;
+    const quietNeeded = t - spokeAt - quietFor >= minMs ? 800 : 1600;
     if (o.onLevel) try { o.onLevel(Math.min(1, rms * 6)); } catch (_) {}
-    if (o.autoStop && spoke && quietFor >= 1600 && t > 1500 && !r.autoFired) {
+    if (o.autoStop && spoke && quietFor >= quietNeeded && t > 1200 && !r.autoFired) {
       r.autoFired = true;
       if (o.onAutoStop) try { o.onAutoStop('silence'); } catch (_) {}
     }
@@ -291,14 +318,14 @@ export function cancelRecording() {
 export function recording() { return !!rec; }
 
 /** Debug: fetch an mp3 (e.g. everyayah), decode it and transcribe it. */
-export async function transcribeUrl(url) {
+export async function transcribeUrl(url, opts) {
   const ab = await (await fetch(url)).arrayBuffer();
   const ctx = newContext();
   try {
     const decoded = await decode(ctx, ab);
     const audio = mono(decoded);
     const t0 = performance.now();
-    const out = await transcribe(audio, decoded.sampleRate);
+    const out = await transcribe(audio, decoded.sampleRate, opts);
     return { ...out, total: Math.round(performance.now() - t0), seconds: decoded.duration };
   } finally {
     try { ctx.close(); } catch (_) {}
