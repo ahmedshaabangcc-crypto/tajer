@@ -146379,7 +146379,7 @@ isHunkInitialized:function(a){return!!v.deferredInitialized[a]},
 initializeLoadedHunk:function(a){var s=$__dart_deferred_initializers__[a]
 if(s==null){throw"DeferredLoading state error: code with hash '"+a+"' was not loaded"}initializeDeferredHunk(s)
 v.deferredInitialized[a]=true},
-deferredLibraryParts:{tools_adhkar:[],tools_hijri:[],tools_qibla:[],tools_quran:[],tools_reminders:[]},
+deferredLibraryParts:{tools_adhkar:[],tools_hijri:[],tools_qibla:[],tools_quran:[],tools_reminders:[],tools_tutor:[]},
 deferredPartUris:[],
 deferredPartHashes:[],
 typeUniverse:{eC:new Map(),tR:{},eT:{},tPV:{},sEA:[]},
