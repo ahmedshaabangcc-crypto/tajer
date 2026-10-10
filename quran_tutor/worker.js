@@ -20,11 +20,24 @@
 //    <|notimestamps|>), max_new_tokens bounded by the ayah's word count.
 //  - Warm-up right after load; one pipeline reused; audio transferred.
 //
-// Messages in:  {type:'load', prefer:'auto'|'wasm'|'webgpu'|'gpu'|'wasm-q4', threads?}
+// Phones (0089 fix — «بنسمع تسميعك…» hung on real phones):
+//  - Threads capped at 2 on phones (big.LITTLE cores, memory per thread).
+//  - WebGPU only after a self-test (warm-up on two window sizes) that
+//    finishes within GPU_TEST_MS; the page remembers a failed test per
+//    device (nogpu) and never offers WebGPU there again.
+//  - A WebGPU run that throws on a short window is re-run on the 30 s
+//    window inside the worker. Hangs/crashes (a blocked or killed worker
+//    can't report anything) are caught by the page's watchdog (tutor.js),
+//    which terminates this worker and retries on a fresh single-threaded
+//    one.
+//  - 'stage' messages let the page tell a slow phone from a dead worker.
+//
+// Messages in:  {type:'load', prefer:'auto'|'wasm'|'webgpu'|'gpu'|'wasm-q4', threads?, nogpu?, safe?, sim?}
 //               {type:'transcribe', id, audio: Float32Array, rate, words?, full?}
 // Messages out: {type:'progress', loaded, total, file}
-//               {type:'ready', device, backend, dtype, threads, isolated, ms, warmMs, cached}
-//               {type:'result', id, text, ms, seconds, frames, tokens, retried, encMs, decMs, featMs}
+//               {type:'stage', stage: 'session'|'warmup'|'gpu-test', kind}
+//               {type:'ready', device, backend, dtype, threads, isolated, ms, warmMs, cached, gpuFailed?}
+//               {type:'result', id, text, ms, seconds, frames, tokens, retried, encMs, decMs, featMs, prepMs, inSeconds}
 //               {type:'error', id?, code, message}
 
 import { pipeline, env, StoppingCriteria } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0';
@@ -74,6 +87,21 @@ let info = null;
 let threads = 1;
 let queue = Promise.resolve();
 const timing = { enc: 0, dec: 0 };
+// Debug-only fault injection (?debug=1&tutor_sim=hang|crash|error[-all]),
+// set by the page only in debug mode: proves the page's watchdog works.
+let sim = '';
+
+const UA = (self.navigator && navigator.userAgent) || '';
+const MOBILE = /Android|iPhone|iPad|iPod|Mobi/i.test(UA);
+const GPU_TEST_MS = 30000;
+
+function withTimeout(promise, ms, what) {
+  let t;
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => { t = setTimeout(() => reject(new Error(what + ' timed out after ' + ms + ' ms')), ms); }),
+  ]).finally(() => clearTimeout(t));
+}
 
 const post = (m, transfer) => self.postMessage(m, transfer || []);
 
@@ -88,11 +116,12 @@ async function gpuHasF16() {
 }
 
 /** Threads for onnxruntime-web: needs SharedArrayBuffer (cross-origin
- * isolation). Up to 4 — more doesn't help a base-size model on phones. */
-function pickThreads(requested) {
-  if (!ISOLATED || typeof SharedArrayBuffer === 'undefined') return 1;
+ * isolation). Up to 4 on desktops; 2 on phones (half of their cores are
+ * slow efficiency cores, and every thread adds memory). */
+function pickThreads(requested, safe) {
+  if (safe || !ISOLATED || typeof SharedArrayBuffer === 'undefined') return 1;
   const hc = (self.navigator && navigator.hardwareConcurrency) || 4;
-  const n = requested > 0 ? requested : Math.min(4, Math.ceil(hc / 2));
+  const n = requested > 0 ? requested : MOBILE ? (hc >= 4 ? 2 : 1) : Math.min(4, Math.ceil(hc / 2));
   return Math.max(1, Math.min(n, hc));
 }
 
@@ -139,31 +168,50 @@ async function cachedBefore() {
   }
 }
 
-async function load(prefer, requestedThreads) {
+async function load(prefer, requestedThreads, opts) {
   if (asr) return info;
   if (loading) return loading;
+  const o = opts || {};
   loading = (async () => {
     const t0 = performance.now();
     const cached = await cachedBefore();
-    threads = pickThreads(requestedThreads || 0);
+    threads = pickThreads(requestedThreads || 0, !!o.safe);
     if (onnx && onnx.wasm) onnx.wasm.numThreads = threads;
     // 'auto': multithreaded WASM when isolated (with the short window the
     // encoder is cheap and the decoder — on WASM either way — dominates;
     // also no 41 MB fp16 encoder and no WebGPU shader compiles). Without
-    // threads, the fp16 encoder on WebGPU (when the GPU has shader-f16).
+    // threads, the fp16 encoder on WebGPU (when the GPU has shader-f16 and
+    // this device hasn't failed the GPU self-test before). Safe mode (the
+    // page's retry after a hang/crash): single-threaded WASM only.
     const order = [];
-    if (prefer === 'gpu' || prefer === 'wasm-q4' || prefer === 'wasm') order.push(prefer);
-    else if (prefer === 'webgpu' || prefer === 'hybrid' || (threads === 1 && await gpuHasF16())) order.push('hybrid');
+    if (o.safe) order.push('wasm');
+    else if (prefer === 'gpu' || prefer === 'wasm-q4' || prefer === 'wasm') order.push(prefer);
+    else if (prefer === 'webgpu' || prefer === 'hybrid' || (!o.nogpu && threads === 1 && await gpuHasF16())) order.push('hybrid');
     if (!order.includes('wasm')) order.push('wasm');
     let lastErr = null;
+    let gpuFailed = '';
     for (const kind of order) {
+      const gpu = kind === 'hybrid' || kind === 'gpu';
       try {
+        post({ type: 'stage', stage: 'session', kind });
         asr = await build(kind);
         // Warm-up (allocations, WebGPU shader compilation) on a second of
         // silence; a failure here (e.g. a WebGPU driver problem) falls back
-        // to the next backend instead of failing the first real check.
+        // to the next backend instead of failing the first real check. On
+        // the GPU it is a self-test: two window sizes (some drivers/kernels
+        // only break on a second shape), and it must finish in time — a GPU
+        // that hangs leaves this worker free (the wait is asynchronous), so
+        // the timeout here catches it.
+        post({ type: 'stage', stage: gpu ? 'gpu-test' : 'warmup', kind });
         const w0 = performance.now();
-        await recognise(new Float32Array(RATE), { cap: 3, frames: MIN_FRAMES });
+        if (gpu) {
+          await withTimeout((async () => {
+            await recognise(new Float32Array(RATE), { cap: 3, frames: MIN_FRAMES });
+            await recognise(new Float32Array(RATE), { cap: 3, frames: MIN_FRAMES + 2 * BUCKET });
+          })(), GPU_TEST_MS, 'WebGPU self-test');
+        } else {
+          await recognise(new Float32Array(RATE), { cap: 3, frames: MIN_FRAMES });
+        }
         const warmMs = Math.round(performance.now() - w0);
         const k = KINDS[kind];
         const usesWasm = kind !== 'gpu';
@@ -176,12 +224,18 @@ async function load(prefer, requestedThreads) {
           ms: Math.round(performance.now() - t0),
           warmMs,
           cached,
+          mobile: MOBILE,
+          safe: !!o.safe,
+          gpuFailed,
         };
         return info;
       } catch (e) {
         lastErr = e;
-        try { if (asr && asr.dispose) await asr.dispose(); } catch (_) {}
+        if (gpu) gpuFailed = String((e && e.message) || e).slice(0, 300);
+        const old = asr;
         asr = null;
+        // A hung GPU session may never finish disposing.
+        try { if (old && old.dispose) await withTimeout(old.dispose(), 3000, 'dispose'); } catch (_) {}
       }
     }
     throw lastErr || new Error('load failed');
@@ -295,7 +349,7 @@ async function recognise(audio, { frames, cap }) {
   return { text, tokens: n, looped: guard.hit, capped: n >= cap, featMs };
 }
 
-async function transcribe(id, audio, words, full) {
+async function transcribe(id, audio, words, full, extra) {
   const t0 = performance.now();
   timing.enc = 0;
   timing.dec = 0;
@@ -305,7 +359,17 @@ async function transcribe(id, audio, words, full) {
     // ~6 tokens per word; room for an isti'adha + basmala before the ayah.
     const cap = words > 0 ? Math.min(440, 70 + words * 10) : Math.min(440, 40 + Math.ceil(seconds * 14));
     frames = full ? FULL_FRAMES : framesFor(audio.length);
-    let r = await recognise(audio, { frames, cap });
+    let r;
+    try {
+      r = await recognise(audio, { frames, cap });
+    } catch (e) {
+      // A kernel that rejects a short window (seen with some WebGPU
+      // builds): the classic 30 s window is what every backend supports.
+      if (frames >= FULL_FRAMES) throw e;
+      retried = true;
+      frames = FULL_FRAMES;
+      r = await recognise(audio, { frames, cap });
+    }
     featMs += r.featMs;
     if ((r.looped || r.capped) && frames < FULL_FRAMES) {
       retried = true;
@@ -331,24 +395,48 @@ async function transcribe(id, audio, words, full) {
     encMs: Math.round(timing.enc),
     decMs: Math.round(timing.dec),
     featMs: Math.round(featMs),
+    ...extra,
   });
+}
+
+let lastLoad = { prefer: 'auto', threads: 0, opts: {} };
+
+function simulate(stage) {
+  // Debug only: a worker that blocks (like a stuck WASM run), dies without
+  // a word (like an out-of-memory kill) or reports an error.
+  // 'hang' etc. only on the first (non-safe) worker; 'hang-all' also on the
+  // page's safe retry (to see the final error).
+  if (!sim || (lastLoad.opts.safe && !/-all$/.test(sim))) return null;
+  const what = sim.replace(/-all$/, '');
+  if (what === 'hang' && stage === 'transcribe') { const end = Date.now() + 10 * 60000; while (Date.now() < end) { /* blocked */ } }
+  // Silent death: closed, and nothing ever posted back.
+  if (what === 'crash' && stage === 'transcribe') { self.close(); return new Promise(() => {}); }
+  return null;
+  if (what === 'error' && stage === 'transcribe') throw new Error('simulated failure (tutor_sim)');
+  if (what === 'loadhang' && stage === 'load') { const end = Date.now() + 10 * 60000; while (Date.now() < end) { /* blocked */ } }
 }
 
 self.onmessage = async (ev) => {
   const m = ev.data || {};
   try {
     if (m.type === 'load') {
-      const i = await load(m.prefer || 'auto', m.threads || 0);
+      sim = typeof m.sim === 'string' ? m.sim : '';
+      lastLoad = { prefer: m.prefer || 'auto', threads: m.threads || 0, opts: { nogpu: !!m.nogpu, safe: !!m.safe } };
+      simulate('load');
+      const i = await load(lastLoad.prefer, lastLoad.threads, lastLoad.opts);
       post({ type: 'ready', ...i });
     } else if (m.type === 'transcribe') {
-      if (!asr) await load('auto', 0);
+      if (!asr) await load(lastLoad.prefer, lastLoad.threads, lastLoad.opts);
+      const p0 = performance.now();
+      const inSeconds = m.rate ? m.audio.length / m.rate : 0;
       const a = tidy(resample(m.audio, m.rate));
+      const prepMs = Math.round(performance.now() - p0);
       if (a.length < RATE * 0.4) {
-        post({ type: 'result', id: m.id, text: '', ms: 0, seconds: a.length / RATE, frames: 0, tokens: 0, retried: false });
+        post({ type: 'result', id: m.id, text: '', ms: 0, seconds: a.length / RATE, frames: 0, tokens: 0, retried: false, prepMs, inSeconds });
         return;
       }
       // One at a time (the review mode queues several ayahs).
-      const job = queue.then(() => transcribe(m.id, a, m.words || 0, !!m.full));
+      const job = queue.then(() => simulate('transcribe') || transcribe(m.id, a, m.words || 0, !!m.full, { prepMs, inSeconds }));
       queue = job.catch(() => {});
       await job;
     }
@@ -356,6 +444,6 @@ self.onmessage = async (ev) => {
     const msg = String((e && e.message) || e);
     const code = /fetch|network|Failed to fetch|NetworkError|load/i.test(msg) && !asr ? 'network'
       : /memory|allocation|OOM/i.test(msg) ? 'memory' : 'failed';
-    post({ type: 'error', id: m.id, code, message: msg });
+    post({ type: 'error', id: m.id, code, message: msg.slice(0, 600) });
   }
 };
