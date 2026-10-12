@@ -1,7 +1,40 @@
 // Web Push service worker: shows مُجتمعي notifications (new orders, …)
 // even when the app is closed, and opens the app when one is tapped.
+//
+// Also the app's root service worker for "install the app" (registered on
+// Android phones by index.html / the app): Chrome's automatic install
+// prompt (beforeinstallprompt → «نزّله») wants a worker with a fetch
+// handler. It only touches page navigations — straight to the network
+// (with navigation preload, so no added delay) and a small offline page
+// when there's no connection; every other request is left alone.
+// «المحفّظ»'s own worker (/tutor/sw.js, scope /tutor/) still controls
+// /tutor/ — the narrower scope wins.
 self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
+self.addEventListener('activate', (event) => event.waitUntil((async () => {
+  if (self.registration.navigationPreload) {
+    try { await self.registration.navigationPreload.enable(); } catch (e) {}
+  }
+  await self.clients.claim();
+})()));
+
+const OFFLINE_HTML = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">' +
+  '<meta name="viewport" content="width=device-width,initial-scale=1"><title>مفيش نت</title></head>' +
+  '<body style="margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0B1530;color:#fff;font-family:system-ui,sans-serif;text-align:center">' +
+  '<div><p style="font-size:20px;font-weight:800">مفيش اتصال بالإنترنت</p><p style="opacity:.75">اتأكد من النت وجرّب تاني.</p>' +
+  '<button onclick="location.reload()" style="border:0;border-radius:12px;padding:12px 22px;background:#F2B661;color:#0B1530;font-weight:800;font-size:15px">جرّب تاني</button></div></body></html>';
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.mode !== 'navigate') return;
+  event.respondWith((async () => {
+    try {
+      const preloaded = await event.preloadResponse;
+      if (preloaded) return preloaded;
+      return await fetch(event.request);
+    } catch (e) {
+      return new Response(OFFLINE_HTML, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    }
+  })());
+});
 
 self.addEventListener('push', (event) => {
   let data = {};
