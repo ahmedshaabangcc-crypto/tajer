@@ -89,10 +89,13 @@
   }
 
   function waLink(phone, shopName) {
-    // 01XXXXXXXXX → 201XXXXXXXXX
-    var p = String(phone || '').replace(/\D/g, '');
+    // Stored form (0089): 01XXXXXXXXX (Egypt) → 201XXXXXXXXX; any other
+    // country is E.164 (+9665…) → its digits.
+    var raw = String(phone || '').trim();
+    var p = raw.replace(/\D/g, '');
     if (/^01\d{9}$/.test(p)) p = '2' + p;
-    if (!/^201\d{9}$/.test(p)) return null;
+    else if (!/^\+/.test(raw) && !/^201\d{9}$/.test(p)) return null;
+    if (!/^[1-9]\d{7,14}$/.test(p)) return null;
     var text = 'أهلًا، شفت محل ' + shopName + ' على مُجتمعي وعايز أسأل عن…';
     return 'https://wa.me/' + p + '?text=' + encodeURIComponent(text);
   }

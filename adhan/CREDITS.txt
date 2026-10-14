@@ -1,0 +1,20 @@
+Adhan recordings used by «تنبيه الصلاة» (lib/core/masjid_tools/adhan_voices.dart).
+All from Wikimedia Commons, under free licenses. Changes for the app: trimmed
+(the *-takbir files are the first phrase with a fade-out), loudness-normalised,
+converted to MP3 64 kbps mono.
+
+madinah.mp3, madinah-takbir.mp3
+  "Islamic call to prayer from the prophet mosque" — ejaz215 (via Freesound)
+  https://commons.wikimedia.org/wiki/File:33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg
+  Source: https://freesound.org/people/ejaz215/sounds/33937/
+  License: Creative Commons Attribution 3.0 (CC BY 3.0) https://creativecommons.org/licenses/by/3.0/
+
+calm.mp3, calm-takbir.mp3
+  "Beautiful adhan" — Adam-synagda (own work)
+  https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg
+  License: CC0 1.0 (public domain dedication) https://creativecommons.org/publicdomain/zero/1.0/
+
+short.mp3, short-takbir.mp3
+  "Adhan" — Aishatu98 (own work)
+  https://commons.wikimedia.org/wiki/File:Adhan.ogg
+  License: CC0 1.0 (public domain dedication) https://creativecommons.org/publicdomain/zero/1.0/

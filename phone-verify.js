@@ -55,9 +55,23 @@
     return 'error:' + String((e && e.message) || e).slice(0, 80);
   }
 
+  // SMS verification is Egypt-only (0089): 01XXXXXXXXX in any form (+20…,
+  // 0020…, 20…, Arabic-Indic digits, spaces) → +201XXXXXXXXX, else null.
+  function egyptE164(phone) {
+    var d = String(phone || '').replace(/[٠-٩]/g, function (c) { return String(c.charCodeAt(0) - 0x660); })
+      .replace(/[۰-۹]/g, function (c) { return String(c.charCodeAt(0) - 0x6F0); })
+      .replace(/[^0-9+]/g, '');
+    d = d.replace(/^\+/, '').replace(/^00/, '');
+    if (/^20/.test(d) && d.length >= 12) d = d.slice(2);
+    d = d.replace(/^0/, '');
+    return /^1[0125][0-9]{8}$/.test(d) ? '+20' + d : null;
+  }
+
   // phone: 01XXXXXXXXX. Resolves '' when the SMS is on its way, otherwise a
   // Firebase error code (e.g. 'auth/too-many-requests').
   window.mogtama3yPhoneSend = function (phone) {
+    var e164 = egyptE164(phone);
+    if (!e164) return Promise.resolve('auth/invalid-phone-number');
     return ready()
       .then(function () {
         if (verifier) {
@@ -65,7 +79,7 @@
           verifier = null;
         }
         verifier = new firebase.auth.RecaptchaVerifier(slot(), { size: 'invisible' });
-        return firebase.auth().signInWithPhoneNumber('+20' + String(phone).replace(/^0/, ''), verifier);
+        return firebase.auth().signInWithPhoneNumber(e164, verifier);
       })
       .then(function (c) { confirmation = c; return ''; })
       .catch(function (e) {

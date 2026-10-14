@@ -194,6 +194,17 @@
       window.addEventListener('flutter-first-frame', reg);
     })();
 
+    // A tapped notification for a window push-sw.js can't navigate itself
+    // (not controlled yet) arrives here: open its link.
+    try {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', function (e) {
+          var d = e.data || {};
+          if (d.type === 'm3-open' && typeof d.url === 'string' && d.url.indexOf(location.origin) === 0) location.href = d.url;
+        });
+        navigator.serviceWorker.startMessages && navigator.serviceWorker.startMessages();
+      }
+    } catch (e) {}
     // Phone notifications (Web Push): 'unsupported' | 'default' | 'granted' | 'denied'.
     window.mogtama3yPushState = function () {
       if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return 'unsupported';

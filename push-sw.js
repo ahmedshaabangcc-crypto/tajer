@@ -36,28 +36,50 @@ self.addEventListener('fetch', (event) => {
   })());
 });
 
+// iOS (home-screen app, 16.4+) and Chrome require a visible notification
+// for every push — a push that shows nothing gets the subscription revoked.
+// Web Push can't play our own sound while the app is closed: the phone
+// plays its notification sound; tapping a prayer notification opens the
+// app, which plays the chosen adhan (?adhan=<prayer>).
 self.addEventListener('push', (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch (e) { data = { title: event.data && event.data.text() }; }
   const title = data.title || 'مُجتمعي';
-  event.waitUntil(self.registration.showNotification(title, {
+  const url = data.url || '/';
+  // The app's links keep their query in the #fragment (/#/masjid/tools/reminders?adhan=asr).
+  const m = /[?&]adhan=([a-z]+)/.exec(url);
+  const adhan = m ? m[1] : null;
+  const opts = {
     body: data.body || '',
     icon: '/icons/Icon-192.png',
     badge: '/icons/Icon-192.png',
     dir: 'rtl',
     lang: 'ar',
-    data: { url: data.url || '/' },
-    vibrate: [120, 60, 120],
-  }));
+    data: { url: url },
+    vibrate: adhan ? [300, 120, 300, 120, 300] : [120, 60, 120],
+  };
+  if (adhan) {
+    opts.tag = 'adhan-' + adhan;
+    opts.renotify = true;
+    opts.requireInteraction = true;
+  }
+  event.waitUntil(self.registration.showNotification(title, opts).catch(() =>
+    self.registration.showNotification(title, { body: opts.body, data: opts.data })));
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const url = (event.notification.data && event.notification.data.url) || '/';
+  const url = new URL((event.notification.data && event.notification.data.url) || '/', self.location.origin).href;
   event.waitUntil((async () => {
     const all = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const c of all) {
-      if (c.url.startsWith(self.location.origin)) { await c.focus(); return c.navigate ? c.navigate(url) : undefined; }
+      if (!c.url.startsWith(self.location.origin)) continue;
+      try {
+        await c.focus();
+        // Only a client this worker controls can be navigated.
+        if (c.navigate) { await c.navigate(url); return; }
+      } catch (e) {}
+      try { c.postMessage({ type: 'm3-open', url: url }); return; } catch (e) {}
     }
     return self.clients.openWindow(url);
   })());
