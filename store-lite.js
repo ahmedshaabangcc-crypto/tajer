@@ -82,10 +82,16 @@
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.status === 204 ? null : r.json(); });
   }
 
-  function money(v) {
+  // 0092: products carry their shop's currency (EGP keeps the short «ج»).
+  var CUR = { EGP: 'ج', AED: 'د.إ', SAR: 'ر.س', KWD: 'د.ك', QAR: 'ر.ق', BHD: 'د.ب', OMR: 'ر.ع', JOD: 'د.أ', IQD: 'د.ع',
+    LBP: 'ل.ل', SYP: 'ل.س', YER: 'ر.ي', LYD: 'د.ل', TND: 'د.ت', DZD: 'د.ج', MAD: 'د.م', SDG: 'ج.س', USD: '$', EUR: '€',
+    GBP: '£', TRY: '₺', ILS: '₪', MRU: 'أ.م', SOS: 'ش.ص', DJF: 'ف.ج', KMF: 'ف.ق' };
+  var THREE = { KWD: 1, BHD: 1, OMR: 1, JOD: 1, IQD: 1, LYD: 1, TND: 1 };
+  function money(v, cur) {
     var n = Number(v);
     if (!isFinite(n)) return '';
-    return n.toLocaleString('ar-EG', { maximumFractionDigits: 2 }) + ' ج';
+    var c = (typeof cur === 'string' && cur.length === 3) ? cur.toUpperCase() : 'EGP';
+    return n.toLocaleString('ar-EG', { maximumFractionDigits: THREE[c] ? 3 : 2 }) + ' ' + (CUR[c] || c);
   }
 
   function waLink(phone, shopName) {
@@ -162,9 +168,9 @@
         }
         var b = el('div', 'sl-b');
         b.appendChild(el('div', 'sl-n', p.name));
-        var pr = el('div', 'sl-pr', money(p.price));
+        var pr = el('div', 'sl-pr', money(p.price, p.currency));
         if (p.old_price && Number(p.old_price) > Number(p.price)) {
-          var was = el('span', 'sl-was', money(p.old_price)); pr.appendChild(was);
+          var was = el('span', 'sl-was', money(p.old_price, p.currency)); pr.appendChild(was);
         }
         b.appendChild(pr);
         card.appendChild(b);
@@ -239,7 +245,7 @@
           headers: Object.assign({ 'Content-Type': 'application/json' }, HEADERS),
           body: JSON.stringify({ p_slug: slug })
         }).catch(function () {});
-        return api('shop_products?shop_id=eq.' + shop.id + '&is_available=eq.true&select=id,name,price,old_price,image_url,images,category&order=category.asc.nullslast,name.asc&limit=200')
+        return api('shop_products?shop_id=eq.' + shop.id + '&is_available=eq.true&select=id,name,price,old_price,currency,image_url,images,category&order=category.asc.nullslast,name.asc&limit=200')
           .then(function (products) { render(shop, products || []); })
           .catch(function () { render(shop, []); });
       })
