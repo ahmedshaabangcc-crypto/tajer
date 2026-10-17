@@ -13,6 +13,9 @@
  * - بيسجّل زيارة واحدة (record_shop_scan) ويحط
  *   window.__mogtama3yScanRecorded = true عشان Flutter مايعدّش تاني.
  * - لو المحل مش موجود أو حصل خطأ في الشبكة، الطبقة بتختفي وFlutter يتصرف.
+ * - بكسلات التاجر (0097، shops.tracking): لو المتجر عنده IDs بنحمّل
+ *   shop-pixels.js (بس على صفحات المتجر) ونبعت PageView، ونكتب تحت
+ *   «المتجر ده بيستخدم أدوات قياس».
  *
  * التركيب: <script src="store-lite.js"></script> في index.html بعد div#splash
  * وقبل flutter_bootstrap.js (من غير async، الملف صغير ومش بيعطّل حاجة).
@@ -68,6 +71,8 @@
     '#store-lite .sl-note{margin-top:8px;text-align:center;font-size:12px;color:rgba(255,255,255,.55)}' +
     '#store-lite .sl-add{display:block;width:100%;margin-top:10px;padding:11px;border-radius:14px;border:1px dashed rgba(242,182,97,.6);' +
     'background:rgba(242,182,97,.08);color:#F2B661;font:inherit;font-size:14px;font-weight:700;cursor:pointer}' +
+    '#store-lite .sl-track{margin-top:18px;font-size:12px;color:rgba(255,255,255,.6);line-height:1.7}' +
+    '#store-lite .sl-track summary{cursor:pointer}' +
     '#store-lite .sl-was{margin-inline-start:6px;font-size:12px;font-weight:400;color:rgba(255,255,255,.5);text-decoration:line-through}';
 
   function el(tag, cls, text) {
@@ -233,6 +238,37 @@
     } catch (e) { /* the store still works without it */ }
   }
 
+  // Merchant pixels (0097): queue the command and load shop-pixels.js once.
+  function pixels(name, payload) {
+    var q = window.__mgPixelsQ = window.__mgPixelsQ || [];
+    q.push([name, JSON.stringify(payload)]);
+    if (!window.mogtama3yShopPixels && !document.getElementById('mg-shop-pixels')) {
+      var s = document.createElement('script');
+      s.id = 'mg-shop-pixels'; s.async = true; s.src = 'shop-pixels.js';
+      document.head.appendChild(s);
+    }
+  }
+
+  function startPixels(shop) {
+    api('shops?id=eq.' + shop.id + '&select=tracking&limit=1')
+      .then(function (rows) {
+        var t = rows && rows[0] && rows[0].tracking;
+        if (!t || typeof t !== 'object') return;
+        var keys = Object.keys(t).filter(function (k) { return k !== 'fb_domain_verification'; });
+        if (!keys.length) return;
+        pixels('init', { shop: shop.id, tracking: t });
+        pixels('event', { name: 'PageView', key: 's/' + slug });
+        var wrap = root && root.querySelector('.sl-wrap');
+        if (wrap) {
+          var det = el('details', 'sl-track');
+          det.appendChild(el('summary', null, 'المتجر ده بيستخدم أدوات قياس'));
+          det.appendChild(el('div', null, 'صاحب المتجر بيستخدم أدوات قياس الإعلانات والزيارات (زي Meta وTikTok وGoogle) عشان يعرف إعلاناته جابت كام زيارة وطلب. الأدوات دي بتشتغل على صفحات المتجر ده بس، ومش بتوصلها بيانات التوصيل بتاعتك (الاسم والرقم والعنوان).'));
+          wrap.appendChild(det);
+        }
+      })
+      .catch(function () { /* قبل 0097 أو شبكة: من غير بكسلات */ });
+  }
+
   function start() {
     api('shops?slug=eq.' + encodeURIComponent(slug) + '&select=id,name,category,description,address,whatsapp,cover_image_url&limit=1')
       .then(function (rows) {
@@ -247,7 +283,8 @@
         }).catch(function () {});
         return api('shop_products?shop_id=eq.' + shop.id + '&is_available=eq.true&select=id,name,price,old_price,currency,image_url,images,category&order=category.asc.nullslast,name.asc&limit=200')
           .then(function (products) { render(shop, products || []); })
-          .catch(function () { render(shop, []); });
+          .catch(function () { render(shop, []); })
+          .then(function () { startPixels(shop); });
       })
       .catch(function () { /* شبكة: نسيب Flutter يتصرف */ });
   }
