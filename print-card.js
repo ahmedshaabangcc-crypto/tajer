@@ -133,4 +133,42 @@
       return false;
     }
   };
+
+  // Picks a text file (متجري's products CSV import, 0098) and resolves with
+  // its text ('' when cancelled, 'ERR:…' when it can't). The app parses it
+  // and sends the rows; the file itself is never uploaded.
+  window.mogtama3yPickTextFile = function (accept) {
+    return new Promise(function (resolve) {
+      try {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = clean(accept) || '.csv,text/csv';
+        input.style.display = 'none';
+        var done = false;
+        var finish = function (v) {
+          if (done) return;
+          done = true;
+          if (input.parentNode) input.parentNode.removeChild(input);
+          resolve(v);
+        };
+        input.onchange = function () {
+          var f = input.files && input.files[0];
+          if (!f) { finish(''); return; }
+          if (f.size > 10 * 1024 * 1024) { finish('ERR:too-big'); return; }
+          var r = new FileReader();
+          r.onload = function () { finish(String(r.result || '')); };
+          r.onerror = function () { finish('ERR:read'); };
+          r.readAsText(f, 'utf-8');
+        };
+        // A cancelled dialog: focus comes back without a file.
+        window.addEventListener('focus', function () {
+          setTimeout(function () { if (!input.files || !input.files.length) finish(''); }, 1500);
+        }, { once: true });
+        document.body.appendChild(input);
+        input.click();
+      } catch (e) {
+        resolve('ERR:unsupported');
+      }
+    });
+  };
 })();

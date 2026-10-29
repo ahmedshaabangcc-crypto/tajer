@@ -53,22 +53,35 @@
     return isFinite(n) ? Math.round(n * 1000) / 1000 : 0;
   }
 
-  // data: {currency, value?, contents:[{id, name, price, quantity}], order_id?}
+  // data: {currency, value?, contents:[{id, name, price, quantity, variant_id?}], order_id?,
+  //        shipping?, discount?, coupon?}  (0099: the checkout's shipping / amount off / code)
   function norm(data) {
     data = data || {};
     var contents = (data.contents || []).filter(function (c) { return c && c.id != null; }).map(function (c) {
-      return { id: String(c.id), name: c.name ? String(c.name).slice(0, 100) : '', price: num(c.price), quantity: Math.max(1, parseInt(c.quantity, 10) || 1) };
+      var o = { id: String(c.id), name: c.name ? String(c.name).slice(0, 100) : '', price: num(c.price), quantity: Math.max(1, parseInt(c.quantity, 10) || 1) };
+      // 0098: the chosen variant (GA4 item_variant).
+      if (c.variant_id != null && /^[0-9a-f-]{36}$/i.test(String(c.variant_id))) o.variant = String(c.variant_id);
+      return o;
     });
     var value = data.value != null ? num(data.value)
       : num(contents.reduce(function (s, c) { return s + c.price * c.quantity; }, 0));
     var cur = typeof data.currency === 'string' && /^[A-Z]{3}$/.test(data.currency) ? data.currency : 'EGP';
     var items = contents.reduce(function (s, c) { return s + c.quantity; }, 0);
-    return { contents: contents, value: value, currency: cur, num_items: items, order_id: data.order_id ? String(data.order_id) : null };
+    var coupon = typeof data.coupon === 'string' && /^[A-Za-z0-9_\u0621-\u064A-]{1,40}$/.test(data.coupon) ? data.coupon : null;
+    return { contents: contents, value: value, currency: cur, num_items: items, order_id: data.order_id ? String(data.order_id) : null,
+      shipping: data.shipping != null ? num(data.shipping) : null, discount: data.discount != null ? num(data.discount) : null, coupon: coupon };
   }
 
   var GA = { PageView: 'page_view', ViewContent: 'view_item', AddToCart: 'add_to_cart', InitiateCheckout: 'begin_checkout', Purchase: 'purchase' };
   var TT = { ViewContent: 'ViewContent', AddToCart: 'AddToCart', InitiateCheckout: 'InitiateCheckout', Purchase: 'CompletePayment' };
   var SC = { PageView: 'PAGE_VIEW', ViewContent: 'VIEW_CONTENT', AddToCart: 'ADD_CART', InitiateCheckout: 'START_CHECKOUT', Purchase: 'PURCHASE' };
+
+  // GA4 / GTM ecommerce: shipping and coupon on begin_checkout / purchase.
+  function addCheckout(o, d) {
+    if (d.shipping != null) o.shipping = d.shipping;
+    if (d.coupon) o.coupon = d.coupon;
+    if (d.discount) o.discount = d.discount;
+  }
 
   // One standard event → the vendor calls, as data: [vendor, ...arguments].
   // vendor: 'fbq' | 'ttq' (args[0] = pixel id, then method + args) | 'snaptr' | 'gtag' | 'dl' (mgShopLayer push).
@@ -94,6 +107,7 @@
         };
         if (name === 'ViewContent' && d.contents[0]) fb.content_name = d.contents[0].name;
         if (name === 'InitiateCheckout' || name === 'Purchase') fb.num_items = d.num_items;
+        if (d.coupon) fb.coupon = d.coupon;
         calls.push(eventId ? ['fbq', 'trackSingle', ids.meta_pixel, name, fb, { eventID: eventId }] : ['fbq', 'trackSingle', ids.meta_pixel, name, fb]);
       }
     }
@@ -122,12 +136,17 @@
     }
 
     var gaTargets = [ids.ga4, ids.google_ads ? ids.google_ads.split('/')[0] : null].filter(Boolean);
-    var gaItems = d.contents.map(function (c) { return { item_id: c.id, item_name: c.name, price: c.price, quantity: c.quantity }; });
+    var gaItems = d.contents.map(function (c) {
+      var it = { item_id: c.id, item_name: c.name, price: c.price, quantity: c.quantity };
+      if (c.variant) it.item_variant = c.variant;
+      return it;
+    });
     if (gaTargets.length) {
       if (isPage) {
         calls.push(['gtag', 'event', 'page_view', { send_to: gaTargets, page_location: page.location, page_title: page.title }]);
       } else {
         var ga = { send_to: gaTargets, currency: d.currency, value: d.value, items: gaItems };
+        addCheckout(ga, d);
         if (name === 'Purchase' && d.order_id) ga.transaction_id = d.order_id;
         calls.push(['gtag', 'event', GA[name], ga]);
       }
@@ -141,6 +160,7 @@
         calls.push(['dl', { event: 'mg_page_view', page_location: page.location, page_title: page.title }]);
       } else {
         var ec = { currency: d.currency, value: d.value, items: gaItems };
+        addCheckout(ec, d);
         if (name === 'Purchase' && d.order_id) ec.transaction_id = d.order_id;
         calls.push(['dl', { ecommerce: null }]);
         calls.push(['dl', { event: GA[name], event_id: eventId, ecommerce: ec }]);
