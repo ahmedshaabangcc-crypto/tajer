@@ -1,0 +1,72 @@
+[
+ {
+  "path": "/guides/free-online-store/",
+  "title": "إزاي تعمل متجر أونلاين لمحلك ببلاش",
+  "group": "للتجار وأصحاب المحلات"
+ },
+ {
+  "path": "/guides/whatsapp-orders/",
+  "title": "إزاي تستقبل طلبات محلك على واتساب بلينك وQR",
+  "group": "للتجار وأصحاب المحلات"
+ },
+ {
+  "path": "/guides/claim-your-shop/",
+  "title": "محلك موجود في الدليل؟ استلمه متجر جاهز",
+  "group": "للتجار وأصحاب المحلات"
+ },
+ {
+  "path": "/guides/online-payment-for-shops/",
+  "title": "إزاي تفعّل الدفع الأونلاين لمتجرك في مصر",
+  "group": "للتجار وأصحاب المحلات"
+ },
+ {
+  "path": "/guides/store-domain-and-pixel/",
+  "title": "متجرك على دومين باسمك، مع بكسل فيسبوك وتيك توك وجوجل",
+  "group": "للتجار وأصحاب المحلات"
+ },
+ {
+  "path": "/guides/owners-union-app/",
+  "title": "إزاي تنظّم اتحاد ملاك العمارة من الموبايل",
+  "group": "لسكان العمارات"
+ },
+ {
+  "path": "/guides/maintenance-fees/",
+  "title": "إزاي تجمع مستحقات الصيانة وتعرض المصروفات بشفافية",
+  "group": "لسكان العمارات"
+ },
+ {
+  "path": "/guides/visitor-qr-passes/",
+  "title": "تصاريح الزوار بـ QR للعمارة",
+  "group": "لسكان العمارات"
+ },
+ {
+  "path": "/guides/mosque-page/",
+  "title": "إزاي تعمل صفحة لمسجدك بالإقامة وخطبة الجمعة",
+  "group": "للمساجد"
+ },
+ {
+  "path": "/guides/prayer-times/",
+  "title": "مواقيت الصلاة لمكانك وأقرب مسجد",
+  "group": "للمساجد"
+ },
+ {
+  "path": "/guides/quran-memorization/",
+  "title": "تسميع وحفظ القرآن مع «المحفّظ»",
+  "group": "للمساجد"
+ },
+ {
+  "path": "/guides/digital-address/",
+  "title": "عنوانك الإلكتروني: لينك واحد لعنوانك بالتفصيل",
+  "group": "لكل الناس"
+ },
+ {
+  "path": "/guides/report-street-problem/",
+  "title": "إزاي تبلّغ عن مشكلة في الحي",
+  "group": "لكل الناس"
+ },
+ {
+  "path": "/guides/find-nearby-shops/",
+  "title": "إزاي تلاقي صيدلية أو محل قريب منك",
+  "group": "لكل الناس"
+ }
+]

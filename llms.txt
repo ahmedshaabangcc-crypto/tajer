@@ -1,12 +1,28 @@
 # مُجتمعي (mogtama3y.com)
 
-> A free Arabic neighbourhood app for Egypt and the Arab world: a directory of nearby shops and services, free online stores for shop owners, owners' unions for residential buildings, and mosque pages. The app is a Flutter web app (its screens render client-side); the crawlable content lives on the directory site below.
+> A free Arabic neighbourhood app for Egypt and the Arab world: a directory of nearby shops and services, free online stores for shop owners, owners' unions for residential buildings, and mosque pages. The app is a Flutter web app (its screens render client-side); the crawlable content is in the static guide pages and the directory site below.
 
 ## Apps
 - [مُجتمعي](https://mogtama3y.com/): the main app (directory, stores, classifieds, neighbourhood)
 - [متجري](https://tajer.mogtama3y.com/): a free online store for a shop, with no commission
 - [اتحاد الملاك](https://ittihad.mogtama3y.com/): building owners' unions: dues, expenses, announcements
 - [مسجدي](https://masjidi.mogtama3y.com/): a page for a mosque: prayer times, iqama, Friday sermon
+
+## Guides (step by step, in Arabic)
+- [إزاي تعمل متجر أونلاين لمحلك ببلاش](https://mogtama3y.com/guides/free-online-store/)
+- [إزاي تستقبل طلبات محلك على واتساب بلينك وQR](https://mogtama3y.com/guides/whatsapp-orders/)
+- [محلك موجود في الدليل؟ استلمه متجر جاهز](https://mogtama3y.com/guides/claim-your-shop/)
+- [إزاي تفعّل الدفع الأونلاين لمتجرك في مصر](https://mogtama3y.com/guides/online-payment-for-shops/)
+- [متجرك على دومين باسمك، مع بكسل فيسبوك وتيك توك وجوجل](https://mogtama3y.com/guides/store-domain-and-pixel/)
+- [إزاي تنظّم اتحاد ملاك العمارة من الموبايل](https://mogtama3y.com/guides/owners-union-app/)
+- [إزاي تجمع مستحقات الصيانة وتعرض المصروفات بشفافية](https://mogtama3y.com/guides/maintenance-fees/)
+- [تصاريح الزوار بـ QR للعمارة](https://mogtama3y.com/guides/visitor-qr-passes/)
+- [إزاي تعمل صفحة لمسجدك بالإقامة وخطبة الجمعة](https://mogtama3y.com/guides/mosque-page/)
+- [مواقيت الصلاة لمكانك وأقرب مسجد](https://mogtama3y.com/guides/prayer-times/)
+- [تسميع وحفظ القرآن مع «المحفّظ»](https://mogtama3y.com/guides/quran-memorization/)
+- [عنوانك الإلكتروني: لينك واحد لعنوانك بالتفصيل](https://mogtama3y.com/guides/digital-address/)
+- [إزاي تبلّغ عن مشكلة في الحي](https://mogtama3y.com/guides/report-street-problem/)
+- [إزاي تلاقي صيدلية أو محل قريب منك](https://mogtama3y.com/guides/find-nearby-shops/)
 
 ## Crawlable content
 - [دليل مُجتمعي](https://dalil.mogtama3y.com/): places, stores, products and prices, described in [its llms.txt](https://dalil.mogtama3y.com/llms.txt)
