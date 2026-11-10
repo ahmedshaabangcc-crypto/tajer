@@ -1,0 +1,17 @@
+# مُجتمعي (mogtama3y.com)
+
+> A free Arabic neighbourhood app for Egypt and the Arab world: a directory of nearby shops and services, free online stores for shop owners, owners' unions for residential buildings, and mosque pages. The app is a Flutter web app (its screens render client-side); the crawlable content lives on the directory site below.
+
+## Apps
+- [مُجتمعي](https://mogtama3y.com/): the main app (directory, stores, classifieds, neighbourhood)
+- [متجري](https://tajer.mogtama3y.com/): a free online store for a shop, with no commission
+- [اتحاد الملاك](https://ittihad.mogtama3y.com/): building owners' unions: dues, expenses, announcements
+- [مسجدي](https://masjidi.mogtama3y.com/): a page for a mosque: prayer times, iqama, Friday sermon
+
+## Crawlable content
+- [دليل مُجتمعي](https://dalil.mogtama3y.com/): places, stores, products and prices, described in [its llms.txt](https://dalil.mogtama3y.com/llms.txt)
+- [Sitemap](https://mogtama3y.com/sitemap.xml)
+
+## Legal
+- [Privacy](https://mogtama3y.com/privacy/)
+- [Terms](https://mogtama3y.com/terms/)
