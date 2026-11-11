@@ -23,6 +23,7 @@
 - [عنوانك الإلكتروني: لينك واحد لعنوانك بالتفصيل](https://mogtama3y.com/guides/digital-address/)
 - [إزاي تبلّغ عن مشكلة في الحي](https://mogtama3y.com/guides/report-street-problem/)
 - [إزاي تلاقي صيدلية أو محل قريب منك](https://mogtama3y.com/guides/find-nearby-shops/)
+- [إزاي تعمل منيو أونلاين لمطعمك بـ QR](https://mogtama3y.com/guides/restaurant-qr-menu/)
 
 ## Crawlable content
 - [دليل مُجتمعي](https://dalil.mogtama3y.com/): places, stores, products and prices, described in [its llms.txt](https://dalil.mogtama3y.com/llms.txt)
