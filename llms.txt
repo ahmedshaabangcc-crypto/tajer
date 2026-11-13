@@ -24,6 +24,7 @@
 - [إزاي تبلّغ عن مشكلة في الحي](https://mogtama3y.com/guides/report-street-problem/)
 - [إزاي تلاقي صيدلية أو محل قريب منك](https://mogtama3y.com/guides/find-nearby-shops/)
 - [إزاي البقالة أو السوبر ماركت يستقبل طلبات أونلاين من الجيران](https://mogtama3y.com/guides/grocery-online-orders/)
+- [إزاي تعمل كتالوج منتجات لصيدليتك أونلاين](https://mogtama3y.com/guides/pharmacy-online-catalog/)
 - [إزاي تعمل منيو أونلاين لمطعمك بـ QR](https://mogtama3y.com/guides/restaurant-qr-menu/)
 
 ## Crawlable content
