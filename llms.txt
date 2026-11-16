@@ -27,6 +27,7 @@
 - [إزاي تعمل كتالوج منتجات لصيدليتك أونلاين](https://mogtama3y.com/guides/pharmacy-online-catalog/)
 - [إزاي تعمل منيو أونلاين لمطعمك بـ QR](https://mogtama3y.com/guides/restaurant-qr-menu/)
 - [إزاي تبيع هدوم محلك أونلاين](https://mogtama3y.com/guides/sell-clothes-online/)
+- [إزاي تظهّر محلك ومنتجاتك في جوجل ببلاش](https://mogtama3y.com/guides/show-shop-on-google/)
 
 ## Crawlable content
 - [دليل مُجتمعي](https://dalil.mogtama3y.com/): places, stores, products and prices, described in [its llms.txt](https://dalil.mogtama3y.com/llms.txt)
