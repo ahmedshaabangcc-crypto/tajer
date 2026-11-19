@@ -26,6 +26,7 @@
 - [إزاي البقالة أو السوبر ماركت يستقبل طلبات أونلاين من الجيران](https://mogtama3y.com/guides/grocery-online-orders/)
 - [بديل تطبيقات التوصيل من غير عمولة على كل طلب](https://mogtama3y.com/guides/no-commission-delivery-alternative/)
 - [إزاي تعمل كتالوج منتجات لصيدليتك أونلاين](https://mogtama3y.com/guides/pharmacy-online-catalog/)
+- [إزاي تطبع فاتورة لكل طلب أونلاين من محلك](https://mogtama3y.com/guides/print-order-invoice/)
 - [إزاي تروّج لمحلك للناس اللي ساكنين حواليك](https://mogtama3y.com/guides/promote-shop-nearby/)
 - [إزاي تعمل منيو أونلاين لمطعمك بـ QR](https://mogtama3y.com/guides/restaurant-qr-menu/)
 - [إزاي تبيع هدوم محلك أونلاين](https://mogtama3y.com/guides/sell-clothes-online/)
