@@ -24,6 +24,7 @@
 - [إزاي تبلّغ عن مشكلة في الحي](https://mogtama3y.com/guides/report-street-problem/)
 - [إزاي تلاقي صيدلية أو محل قريب منك](https://mogtama3y.com/guides/find-nearby-shops/)
 - [إزاي البقالة أو السوبر ماركت يستقبل طلبات أونلاين من الجيران](https://mogtama3y.com/guides/grocery-online-orders/)
+- [إزاي تدير طلبات محلك الأونلاين من الكمبيوتر](https://mogtama3y.com/guides/manage-shop-orders-from-computer/)
 - [بديل تطبيقات التوصيل من غير عمولة على كل طلب](https://mogtama3y.com/guides/no-commission-delivery-alternative/)
 - [إزاي تعمل كتالوج منتجات لصيدليتك أونلاين](https://mogtama3y.com/guides/pharmacy-online-catalog/)
 - [إزاي تطبع فاتورة لكل طلب أونلاين من محلك](https://mogtama3y.com/guides/print-order-invoice/)
